@@ -9,10 +9,17 @@ const Men = () => {
   const productDetails = useSelector((state) => state.cardDetails);
   useEffect(() => {
     dispatch(cardInDetailsInfo());
-  }, []);
+  }, [dispatch]);
+
+  const { loading, error, data } = productDetails;
   return (
     <div className="w-full">
-      <Products productDetails={productDetails} />
+      <Products
+        data={data.data}
+        length={data.length}
+        loading={loading}
+        error={error}
+      />
     </div>
   );
 };

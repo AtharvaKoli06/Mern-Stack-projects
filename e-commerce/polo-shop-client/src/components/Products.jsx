@@ -8,7 +8,7 @@ import Filter from "./Filter";
 import NoMatching from "./NoMatching";
 import Loader from "./Loader";
 
-const Products = ({ productDetails }) => {
+const Products = ({ loading, data, error, length }) => {
   return (
     <>
       <div className=" w-full flex">
@@ -33,12 +33,7 @@ const Products = ({ productDetails }) => {
             </div>
           </div>
           <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 mt-5 gap-5 w-full mb-5 relative">
-            {productDetails.loading && (
-              <div>
-                <Loader />
-              </div>
-            )}
-            {!productDetails.loading && productDetails.error ? (
+            {!loading && error ? (
               <div>
                 <div className="flex items-center justify-center p-5 w-full bg-white absolute">
                   <div classNAme="text-center">
@@ -61,19 +56,20 @@ const Products = ({ productDetails }) => {
                       </div>
                     </div>
                     <h1 className="mt-5 text-[36px] font-bold text-slate-800 lg:text-[40px]">
-                      {productDetails.error}
+                      {error}
                     </h1>
                   </div>
                 </div>
               </div>
             ) : null}
-            {!productDetails.loading && productDetails.data.length ? (
+            {loading && !length ? <Loader /> : null}
+            {data && (
               <>
-                {productDetails.data.map((item) => (
-                  <NormalCard item={item} key={item.id} />
+                {data.map((item) => (
+                  <NormalCard item={item} key={item._id} />
                 ))}
               </>
-            ) : null}
+            )}
           </div>
         </div>
       </div>

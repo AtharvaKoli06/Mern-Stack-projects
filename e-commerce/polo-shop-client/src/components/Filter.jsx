@@ -124,7 +124,7 @@ const Filter = () => {
             <h2 className="text-md font-bold items-center">Category</h2>
             <div className="flex flex-col">
               {category.map((category) => (
-                <span className="m-1">
+                <span key={category} className="m-1">
                   <input type="checkbox" />
                   <span className="ml-2">{category}</span>
                 </span>
@@ -135,7 +135,7 @@ const Filter = () => {
             <h2 className="text-md font-bold items-center">Fit</h2>
             <div className="flex flex-col">
               {fit.map((fit) => (
-                <span className="m-1">
+                <span key={fit} className="m-1">
                   <input type="checkbox" />
                   <span className="ml-2">{fit}</span>
                 </span>
@@ -146,7 +146,7 @@ const Filter = () => {
             <h2 className="text-md font-bold items-center">Sleeve</h2>
             <div className="flex flex-col">
               {sleeve.map((sleeve) => (
-                <span className="m-2">
+                <span key={sleeve} className="m-2">
                   <input type="checkbox" />
                   <span className="ml-2">{sleeve}</span>
                 </span>
@@ -177,7 +177,7 @@ const Filter = () => {
                 />
               </span>
               {color.map((color) => (
-                <span className="m-1">
+                <span key={color} className="m-1">
                   <input type="checkbox" />
                   <span className="ml-2">{color}</span>
                 </span>

@@ -1,27 +1,28 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { productDetailsWithId } from "../redux/slices/DataWithId";
 
 const NormalCard = ({ item }) => {
   const dispatch = useDispatch();
-  const [stopRender, setStopRender] = useState(true);
-  useEffect(() => {
-    dispatch(productDetailsWithId(item.id));
-  }, [stopRender]);
+  const { _id } = item;
+  const [query, setQuery] = useState("");
+  const navigate = useNavigate();
 
-  const handleRendering = () => {
-    setStopRender(!stopRender);
+  const handlePage = useRef({ effect: false });
+
+  useEffect(() => {
+    dispatch(productDetailsWithId(_id));
+    handlePage.current["effect"] = true;
+  }, [query]);
+
+  const handleItemId = () => {
+    navigate("/cardDetails");
   };
 
   return (
     <>
-      <Link
-        to="/cardDetails"
-        key={item.id}
-        className="m-auto w-60 cursor-pointer"
-        onClick={handleRendering}
-      >
+      <div className="m-auto w-60 cursor-pointer" onClick={handleItemId}>
         <img src={item.img[1].img} className="m-auto w-52 cursor-pointer" />
         <div className="w-52 mx-auto">
           <strong>
@@ -35,7 +36,7 @@ const NormalCard = ({ item }) => {
             </div>
           </div>
         </div>
-      </Link>
+      </div>
     </>
   );
 };

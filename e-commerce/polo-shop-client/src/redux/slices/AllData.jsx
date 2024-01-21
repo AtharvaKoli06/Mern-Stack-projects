@@ -11,7 +11,7 @@ export const cardInDetailsInfo = createAsyncThunk(
   async () => {
     try {
       return axios
-        .get("https://6577dd93197926adf62ee4bd.mockapi.io/api/v1/productList")
+        .get("http://localhost:8000/api/v1/products/allProducts")
         .then((res) => res.data);
     } catch (error) {
       throw new Error("Failed to fetch data");
@@ -22,6 +22,7 @@ export const cardInDetailsInfo = createAsyncThunk(
 const cardsDetailSlice = createSlice({
   name: "cardDetails",
   initialState,
+  reducer: {},
   extraReducers: (builder) => {
     builder.addCase(cardInDetailsInfo.pending, (state) => {
       state.loading = true;

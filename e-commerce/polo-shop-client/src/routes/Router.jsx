@@ -18,7 +18,6 @@ import { Routes, Route } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 const Router = () => {
-  const productData = useSelector((state) => state.cardDetailsWithId);
   return (
     <Routes>
       <Route path="/" element={<Home />} />
@@ -32,10 +31,7 @@ const Router = () => {
       <Route path="/orderInformation" element={<TrackOrder />} />
       <Route path="/login" element={<Login />} />
       <Route path="/signUp" element={<SignUp />} />
-      <Route
-        path="/cardDetails"
-        element={<CardDetails productData={productData} />}
-      />
+      <Route path="/cardDetails" element={<CardDetails />} />
     </Routes>
   );
 };
