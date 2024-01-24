@@ -22,7 +22,7 @@ export const cardInDetailsInfo = createAsyncThunk(
 const cardsDetailSlice = createSlice({
   name: "cardDetails",
   initialState,
-  reducer: {},
+  reducers: {},
   extraReducers: (builder) => {
     builder.addCase(cardInDetailsInfo.pending, (state) => {
       state.loading = true;

@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
 
-import { cardInDetailsInfo } from "../redux/slices/AllData";
+import { cardInDetailsInfo } from "../redux/slices/AllData.slice.jsx";
 import Products from "../components/Products";
 import Loader from "../components/Loader";
 

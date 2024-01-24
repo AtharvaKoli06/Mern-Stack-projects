@@ -10,7 +10,7 @@ import Blog from "../pages/Blog";
 import Men from "../pages/Men";
 import FitGuide from "../pages/FitGuide";
 import TrackOrder from "../pages/TrackOrder";
-import Login from "../pages/Login";
+import Login from "../pages/LoginUser";
 import SignUp from "../pages/SignUp";
 import CardDetails from "../pages/CardDetails";
 import { Routes, Route } from "react-router-dom";
@@ -31,7 +31,7 @@ const Router = () => {
       <Route path="/orderInformation" element={<TrackOrder />} />
       <Route path="/login" element={<Login />} />
       <Route path="/signUp" element={<SignUp />} />
-      <Route path="/cardDetails" element={<CardDetails />} />
+      <Route path="/cardDetails/:id" element={<CardDetails />} />
     </Routes>
   );
 };

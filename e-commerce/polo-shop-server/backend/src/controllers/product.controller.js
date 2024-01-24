@@ -61,11 +61,11 @@ export const uploadProduct = asyncHandler(async (req, res) => {
     features,
     additionalDetail,
   });
+  const createdProduct = await Product.findById(product._id);
+
   if (!createdProduct) {
     throw new ApiError(500, "Something went wrong when creating the Product");
   }
-  const createdProduct = await Product.findById(product._id);
-
   // 9. return response
   return res
     .status(201)
@@ -88,16 +88,12 @@ export const getAllProducts = asyncHandler(async (req, res) => {
 });
 
 export const getProductsWithId = asyncHandler(async (req, res) => {
-  try {
-    let id = req.params.id;
-    const product = await Product.findById(id);
-    if (!product) {
-      throw ApiError(404, "Product Id not Found");
-    }
-    res.status(201).json(new ApiResponse(200, product, "OK"));
-  } catch (error) {
-    throw ApiError(500, "Something Went Wrong");
+  let id = req.params.id;
+  const product = await Product.findById(id);
+  if (!product) {
+    throw new ApiError(404, "Product With Id not Found");
   }
+  res.status(201).json(new ApiResponse(200, product, "OK"));
 });
 
 export const updateProductsWithId = asyncHandler(async (req, res) => {

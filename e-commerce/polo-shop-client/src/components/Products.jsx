@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { CiFilter } from "react-icons/ci";
 import { LuListEnd } from "react-icons/lu";
@@ -9,6 +9,10 @@ import NoMatching from "./NoMatching";
 import Loader from "./Loader";
 
 const Products = ({ loading, data, error, length }) => {
+  const handleCardClick = (id) => {
+    const findId = data.find((itemId) => itemId._id === id);
+    return findId;
+  };
   return (
     <>
       <div className=" w-full flex">
@@ -66,7 +70,12 @@ const Products = ({ loading, data, error, length }) => {
             {data && (
               <>
                 {data.map((item) => (
-                  <NormalCard item={item} key={item._id} />
+                  <NormalCard
+                    item={item}
+                    key={item._id}
+                    id={item._id}
+                    onClick={() => handleCardClick(item._id)}
+                  />
                 ))}
               </>
             )}

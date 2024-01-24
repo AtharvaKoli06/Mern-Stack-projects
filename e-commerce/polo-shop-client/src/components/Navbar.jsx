@@ -20,7 +20,7 @@ import { dropDownLinks, collection, womenWear } from "../data/data";
 import { useDispatch } from "react-redux";
 import { useState } from "react";
 import { GiTireIronCross } from "react-icons/gi";
-import { cardInDetailsInfo } from "../redux/slices/AllData";
+import { cardInDetailsInfo } from "../redux/slices/AllData.slice";
 
 const Navbar = () => {
   const [remove, setRemove] = useState(true);

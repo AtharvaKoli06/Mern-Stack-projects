@@ -4,7 +4,15 @@ import bcrypt from "bcrypt";
 
 const userSchema = new Schema(
   {
-    username: {
+    firstName: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      trim: true,
+      index: true,
+    },
+    lastName: {
       type: String,
       required: true,
       unique: true,
@@ -16,28 +24,12 @@ const userSchema = new Schema(
       type: String,
       required: true,
       unique: true,
-      lowercase: true,
       trim: true,
     },
-    fullName: {
+    mobileNumber: {
       type: String,
-      required: true,
-      trim: true,
-      index: true,
+      required: [true, "Mobile Number is required"],
     },
-    avatar: {
-      type: String,
-      required: true,
-    },
-    coverImage: {
-      type: String,
-    },
-    watchHistory: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Video",
-      },
-    ],
     password: {
       type: String,
       required: [true, "Password is required"],
@@ -51,9 +43,13 @@ const userSchema = new Schema(
 
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
-
-  this.password = bcrypt.hash(this.password, 10);
-  next();
+  try {
+    const hashedPassword = await bcrypt.hash(this.password, 10);
+    this.password = hashedPassword;
+    next();
+  } catch (error) {
+    return next(error);
+  }
 });
 
 userSchema.methods.isPasswordCorrect = async function (password) {
@@ -65,8 +61,9 @@ userSchema.methods.generateAccessToken = function () {
     {
       _id: this._id,
       email: this.email,
-      username: this.username,
-      fullName: this.fullName,
+      firstName: this.firstName,
+      lastName: this.lastName,
+      mobileNumber: this.mobileNumber,
     },
     process.env.ACCESS_TOKEN_SECRET,
     {

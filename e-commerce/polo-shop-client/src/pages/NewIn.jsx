@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
 
-import { cardInDetailsInfo } from "../redux/slices/AllData.jsx";
+import { cardInDetailsInfo } from "../redux/slices/AllData.slice.jsx";
 
 import Products from "../components/Products.jsx";
 import Loader from "../components/Loader.jsx";
@@ -15,7 +15,6 @@ const NewIn = () => {
   }, [dispatch]);
 
   const { loading, error, data } = productDetails;
-
   return (
     <>
       <div className="w-full">

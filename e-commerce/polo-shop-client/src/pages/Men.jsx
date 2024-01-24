@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 
-import { cardInDetailsInfo } from "../redux/slices/AllData.jsx";
+import { cardInDetailsInfo } from "../redux/slices/AllData.slice.jsx";
 import { useDispatch, useSelector } from "react-redux";
 
 import Products from "../components/Products.jsx";
