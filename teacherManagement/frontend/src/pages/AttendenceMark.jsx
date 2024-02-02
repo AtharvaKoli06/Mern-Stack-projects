@@ -12,6 +12,11 @@ const AttendenceMark = () => {
     setToggleList(!toggleList);
   };
   const [searchData, setSearchData] = useState([]);
+  const attendData = [];
+  searchData.forEach(({ _id, rollNo, enrollNo, studentsName }) => {
+    attendData.push({ _id, rollNo, enrollNo, studentsName });
+  });
+
   return (
     <>
       <div className="w-full border space-y-5 ">
@@ -21,13 +26,13 @@ const AttendenceMark = () => {
           searchData={searchData}
         />
         <div className="mx-auto font-thin text-sm sm:text-xl flex items-center justify-center">
-          <span>LIST OF ABSENT STUDENTS</span>
+          <span>LIST OF STUDENTS</span>
         </div>
         <div className="border-t-4">
           {toggleList ? (
             <StudentInfo />
           ) : (
-            <SearchList searchData={searchData} />
+            <SearchList attendStudent={attendData} searchData={searchData} />
           )}
         </div>
       </div>

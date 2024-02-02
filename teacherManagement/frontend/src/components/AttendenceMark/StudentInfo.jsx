@@ -3,9 +3,18 @@ import AttendenceList from "../AttendenceMark/AttendenceList";
 import { useSelector, useDispatch } from "react-redux";
 import { getAllStudents } from "../../redux/slices/getAllStudents.slice";
 
+import Loader from "../Loader";
+import Error from "../Error";
+
 const StudentInfo = () => {
-  const data = useSelector((state) => state.allStudent);
-  const fromData = data.data.data.data;
+  const studentInfo = useSelector((state) => state.allStudent);
+  const { loading, error, data } = studentInfo;
+  const studentDetails = data?.data?.data;
+
+  if (studentDetails === undefined) {
+    return <Loader size={50} error={error} />;
+  }
+
   const dispatch = useDispatch();
   useEffect(() => {
     try {
@@ -43,16 +52,25 @@ const StudentInfo = () => {
                       <th className="pb-3 pl-2 pr-10 text-center min-w-[50px]">
                         Section
                       </th>
-                      <th className="pb-3 pr-12 text-end min-w-[100px]">
-                        Lecture
-                      </th>
-                      <th className="pb-3 text-center min-w-[80px]">Date</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {fromData.map((fromData) => (
-                      <AttendenceList key={fromData._id} formData={fromData} />
-                    ))}
+                    {!loading && error ? (
+                      <>
+                        <Error error={error} />
+                      </>
+                    ) : null}
+                    {loading && !studentDetails && <Loader size={50} />}
+                    {studentDetails && (
+                      <>
+                        {studentDetails.map((fromData) => (
+                          <AttendenceList
+                            key={fromData._id}
+                            formData={fromData}
+                          />
+                        ))}
+                      </>
+                    )}
                   </tbody>
                 </table>
               </div>

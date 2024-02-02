@@ -6,6 +6,8 @@ import { MdOutlineIntegrationInstructions } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import { createStudent } from "../../redux/slices/CreateStudent.slice";
 import { IoIosArrowDown } from "react-icons/io";
+import Loader from "../Loader";
+import Error from "../Error";
 
 const Search = ({ handleToggle, setSearchData, searchData }) => {
   const dispatch = useDispatch();
@@ -33,21 +35,30 @@ const Search = ({ handleToggle, setSearchData, searchData }) => {
   });
   const enrollInput = useRef();
 
-  const data = useSelector((state) => state.allStudent);
-  const filterData = data.data.data.data;
+  const allStudents = useSelector((state) => state.allStudent);
+  const { loading, error, data } = allStudents;
+  const students = data?.data?.data;
 
   let enrollNumber;
   const handleEnroll = useCallback(
     (e) => {
       e.preventDefault();
       enrollNumber = enrollInput.current.value;
-      if (enrollNumber >= 100) {
-        const filter = filterData.filter(
-          (field) => field.enrollNo === enrollNumber
-        );
-        setSearchData(filter);
-        console.log(searchData);
-        handleToggle();
+      if (!loading && error) {
+        return <Error error={error.message} />;
+      }
+      if (loading && !students.length) {
+        return <Loader />;
+      }
+      if (students) {
+        if (enrollNumber >= 100) {
+          const filter = students.filter(
+            (field) => field.enrollNo === enrollNumber
+          );
+          setSearchData(filter);
+          console.log(searchData);
+          handleToggle();
+        }
       }
     },
     [enrollNumber]
@@ -58,6 +69,9 @@ const Search = ({ handleToggle, setSearchData, searchData }) => {
       dispatch(createStudent(formData));
     } catch (error) {
       console.log(error.message);
+    }
+    if (error) {
+      return <h1 className="text-xs text-red-600">{error.message}</h1>;
     }
     setFormData({
       rollNo: "",
@@ -82,18 +96,22 @@ const Search = ({ handleToggle, setSearchData, searchData }) => {
 
   const handleSelectedSearch = useCallback(
     (value) => {
-      if (value) {
-        const filtered = filterData.filter(
-          (option) =>
-            option.medium === value.medium &&
-            option.year === value.year &&
-            option.courseName === value.courseName
-        );
-        setSearchData(filtered);
-        handleToggle();
+      if (loading && !students) {
+        return <Loader />;
+      } else if (students) {
+        if (value) {
+          const filtered = students.filter(
+            (option) =>
+              option.medium === value.medium &&
+              option.year === value.year &&
+              option.courseName === value.courseName
+          );
+          setSearchData(filtered);
+          handleToggle();
+        }
       }
     },
-    [filterData]
+    [students]
   );
   const handleSelectChange = (e) => {
     const { name, value } = e.target;
@@ -239,23 +257,6 @@ const Search = ({ handleToggle, setSearchData, searchData }) => {
                 type="text"
                 name="section"
                 value={formData.section}
-                onChange={handleChange}
-                required
-              />
-              <input
-                className="p-2 my-2 rounded w-[100%] focus:outline-blue-600"
-                placeholder="Lecture eg:Lecture-1"
-                name="lecture"
-                value={formData.lecture}
-                onChange={handleChange}
-                type="text"
-                required
-              />
-              <input
-                className="p-2 my-2 rounded w-[100%] focus:outline-blue-600"
-                type="date"
-                name="date"
-                value={formData.date}
                 onChange={handleChange}
                 required
               />

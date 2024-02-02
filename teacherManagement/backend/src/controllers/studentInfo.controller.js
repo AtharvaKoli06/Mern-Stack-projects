@@ -13,8 +13,6 @@ export const studentInfo = asyncHandler(async (req, res) => {
     course,
     courseName,
     section,
-    lecture,
-    date,
   } = req.body;
   if (
     [
@@ -26,14 +24,12 @@ export const studentInfo = asyncHandler(async (req, res) => {
       course,
       courseName,
       section,
-      lecture,
-      date,
     ].some((property) => property?.trim() === "")
   ) {
     throw new ApiError(400, "All properties are required");
   }
   const existingStudent = await StudentData.findOne({
-    $or: [{ rollNo }, { enrollNo }, { studentsName }],
+    $or: [{ enrollNo }, { studentsName }],
   });
   if (existingStudent) {
     throw new ApiError(
@@ -51,8 +47,6 @@ export const studentInfo = asyncHandler(async (req, res) => {
     course,
     courseName,
     section,
-    lecture,
-    date,
   });
   const createStudent = await StudentData.findById(student._id);
 

@@ -2,19 +2,20 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { createAttendence } from "../../redux/slices/CreateAttendenceList.slice";
 
-const SearchList = ({ searchData }) => {
+const SearchList = ({ attendStudent, searchData }) => {
   const dispatch = useDispatch();
   const [isChecked, setIsChecked] = useState(false);
   const handleIsChecked = () => {
     setIsChecked(!isChecked);
   };
+  console.log(attendStudent);
+  console.log(filtered);
 
   const [Attend, setAttend] = useState({
     lecture: "",
     date: "",
+    presentOrAbsent: "",
   });
-
-  console.log(Attend);
 
   const handleAttendenceSubmit = (e) => {
     e.preventDefault();
@@ -26,18 +27,20 @@ const SearchList = ({ searchData }) => {
     setAttend({
       lecture: "",
       date: "",
-      presentOrAbsent: "",
     });
   };
   const handleAttendenceChange = (e) => {
     e.preventDefault();
     const { name, value } = e.target;
-    setAttend({
-      ...Attend,
-      [name]: value,
-      presentOrAbsent: isChecked.toString(),
-    });
+    if (searchData) {
+      setAttend({
+        ...Attend,
+        [name]: value,
+        presentOrAbsent: isChecked.toString(),
+      });
+    }
   };
+  console.log(Attend);
 
   return (
     <>
@@ -96,7 +99,8 @@ const SearchList = ({ searchData }) => {
                                   className="cursor-pointer pl-2 text-slate-500 peer-disabled:cursor-not-allowed peer-disabled:text-slate-400"
                                   htmlFor="id-c01"
                                 >
-                                  {isChecked ? "P" : "A"}
+                                  {isChecked && "P"}
+                                  {!isChecked && "A"}
                                 </label>
                               </div>
                             </td>

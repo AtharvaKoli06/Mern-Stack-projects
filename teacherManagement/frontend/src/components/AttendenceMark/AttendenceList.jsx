@@ -10,8 +10,6 @@ const AttendenceList = ({ formData }) => {
     course,
     courseName,
     section,
-    lecture,
-    date,
   } = formData;
   return (
     <>
@@ -49,16 +47,6 @@ const AttendenceList = ({ formData }) => {
         </td>
         <td className="pr-0 text-center">
           <span className="font-semibold text-light-inverse ">{section}</span>
-        </td>
-        <td className="pr-0 text-start">
-          <span className="font-semibold text-light-inverse text-md/normal">
-            {lecture}
-          </span>
-        </td>
-        <td className="pr-0 text-start">
-          <span className="font-semibold text-light-inverse text-md/normal">
-            {date}
-          </span>
         </td>
       </tr>
     </>
