@@ -10,7 +10,7 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 import { useForm } from "react-hook-form";
 
-import { signUp } from "../redux/slices/Form.slice";
+import { signUp, googleLogin } from "../redux/slices/Form.slice";
 // import
 
 const SignUp = () => {
@@ -32,21 +32,32 @@ const SignUp = () => {
 
   const onSubmit = (data) => {
     handleRegister(data);
-    setTimeout(() => {
-      navigate("/");
-    }, 2000);
+  };
+
+  const handleGooglLogin = () => {
+    try {
+      dispatch(googleLogin());
+    } catch (error) {
+      console.log(error.message);
+    }
   };
 
   return (
     <div className="w-full border">
       <div className="w-4/5 border mx-auto">
-        <div className="shadow-lg w-full sm:w-1/2 mx-auto flex flex-col p-4 items-center justify-center mt-14 space-y-2 mb-5">
+        {/* <div className="shadow-lg w-full sm:w-1/2 mx-auto flex flex-col p-4 items-center justify-center mt-14 space-y-2 mb-5">
           <h2 className="text-gray-300 text-center">SignUp WITH</h2>
-          <div className="w-full flex items-center justify-center cursor-pointer gap-4 p-2">
-            <FaGoogle size={35} className="border-r-2 p-2 text-red-600" />
+          <div
+            className="w-full flex items-center justify-center cursor-pointer gap-4 p-2 "
+            onClick={handleGooglLogin}
+          >
+            <FaGoogle
+              size={35}
+              className="border-r-2 p-2 text-red-600 hover:bg-slate-300"
+            />
             <h2>SIGN IN WITH GOOGLE</h2>
           </div>
-        </div>
+        </div> */}
         <div className="shadow-lg w-full sm:w-1/2 mx-auto flex flex-col p-4 items-center justify-center mt-14 space-y-5 mb-10 relative">
           <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
             <div className="relative mt-2 w-full rounded-md shadow-sm">

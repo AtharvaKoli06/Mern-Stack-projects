@@ -29,9 +29,6 @@ const LoginUser = () => {
 
   const onSubmit = (data) => {
     handleLogin(data);
-    setTimeout(() => {
-      navigate("/");
-    }, 2000);
   };
 
   return (

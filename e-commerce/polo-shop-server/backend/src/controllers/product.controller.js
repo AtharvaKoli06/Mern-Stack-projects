@@ -82,7 +82,7 @@ export const getAllProducts = asyncHandler(async (req, res) => {
   const products = await Product.find();
 
   if (!products) {
-    throw new ApiError(500, "Something went wrong when creating the Product");
+    throw new ApiError(500, "Something went wrong when getting the Products");
   }
   return res.status(201).json(new ApiResponse(200, products, "OK"));
 });

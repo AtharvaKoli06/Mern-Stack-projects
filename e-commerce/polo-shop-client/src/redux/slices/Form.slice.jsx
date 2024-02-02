@@ -79,5 +79,43 @@ const signUpSlice = createSlice({
     });
   },
 });
+export const googleLogin = createAsyncThunk(
+  "user/googleLogin",
+  async (data, { rejectWithValue }) => {
+    try {
+      const res = await axios.post(
+        "http://localhost:8000/api/v1/users/googleLogin",
+        data
+      );
+      return res.data;
+    } catch (error) {
+      throw rejectWithValue(error.res.data);
+    }
+  }
+);
+export const googleLoginSlice = createSlice({
+  name: "userGoogleLogin",
+  initialState: {
+    loading: false,
+    data: null,
+    error: "",
+  },
+  reducers: {},
+  extraReducers: (builder) => {
+    builder.addCase(googleLogin.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(googleLogin.fulfilled, (state, action) => {
+      state.loading = false;
+      state.data = action.payload;
+      state.error = "";
+    });
+    builder.addCase(googleLogin.rejected, (state, action) => {
+      state.loading = false;
+      state.data = [];
+      state.error = action.error.message;
+    });
+  },
+});
 
 export default signUpSlice.reducer;

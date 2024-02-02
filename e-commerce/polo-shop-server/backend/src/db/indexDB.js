@@ -5,7 +5,8 @@ import { DB_NAME } from "../constant.js";
 export const connectDB = async () => {
   try {
     const connectionInstance = await mongoose.connect(
-      `${process.env.URL_DB_CONN}/${DB_NAME}`
+      (`${process.env.URL_DB_CONN}/${DB_NAME}`,
+      { writeConcern: { w: "majority" } })
     );
     // console.log(connectionInstance);
     console.log(
