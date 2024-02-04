@@ -288,7 +288,12 @@ const Search = ({ handleToggle, setSearchData, searchData }) => {
               <option value="" disabled>
                 degree
               </option>
-              <option value="degree">DEGREE</option>
+              <option
+                value="FIRST YEAR"
+                selected={(selected.medium = "FIRST YEAR")}
+              >
+                DEGREE
+              </option>
             </select>
             <label
               htmlFor="medium"
@@ -313,9 +318,24 @@ const Search = ({ handleToggle, setSearchData, searchData }) => {
               <option value="" disabled>
                 year
               </option>
-              <option value="first year">FIRST YEAR</option>
-              <option value="second year">SECOND YEAR</option>
-              <option value="third year">THIRD YEAR</option>
+              <option
+                value="FIRST YEAR"
+                selected={selected.year === "FIRST YEAR"}
+              >
+                FIRST YEAR
+              </option>
+              <option
+                value="SECOND YEAR"
+                selected={selected.year === "SECOND YEAR"}
+              >
+                SECOND YEAR
+              </option>
+              <option
+                value="THIRD YEAR"
+                selected={selected.year === "THIRD YEAR"}
+              >
+                THIRD YEAR
+              </option>
             </select>
             <label
               htmlFor="year"
@@ -340,30 +360,96 @@ const Search = ({ handleToggle, setSearchData, searchData }) => {
               <option value="" disabled>
                 CourseName
               </option>
-              <option value="fybms">FYBMS</option>
-              <option value="sybms">SYBMS</option>
-              <option value="tybms">TYBMS</option>
-              <option value="fyb.sc">FYB.Sc</option>
-              <option value="syb.sc">SYB.Sc</option>
-              <option value="tyb.sc">TYB.Sc</option>
-              <option value="sybmm">FYBMM</option>
-              <option value="sybmm">SYBMM</option>
-              <option value="tybmm">TYBMM</option>
-              <option value="fybfm">FYBFM</option>
-              <option value="sybfm">SYBFM</option>
-              <option value="tybfm">TYBFM</option>
-              <option value="fyb.com">FYB.COM</option>
-              <option value="syb.com">SYB.COM</option>
-              <option value="tyb.com">TYB.COM</option>
-              <option value="fybbi">FYBBI</option>
-              <option value="sybbi">SYBBI</option>
-              <option value="tybbi">TYBBI</option>
-              <option value="fybaf">FYBAF</option>
-              <option value="sybaf">SYBAF</option>
-              <option value="tybaf">TYBAF</option>
-              <option value="fybca">FYBCA</option>
-              <option value="sybca">SYBCA</option>
-              <option value="tybca">TYBCA</option>
+              <option value="FYBMS" selected={selected.courseName === "FYBMS"}>
+                FYBMS
+              </option>
+              <option value="SYBMS" selected={selected.courseName === "SYBMS"}>
+                SYBMS
+              </option>
+              <option value="TYBMS" selected={selected.courseName === "TYBMS"}>
+                TYBMS
+              </option>
+              <option
+                value="FYB.SC"
+                selected={selected.courseName === "FYB.SC"}
+              >
+                FYB.Sc
+              </option>
+              <option
+                value="SYB.SC"
+                selected={selected.courseName === "SYB.SC"}
+              >
+                SYB.Sc
+              </option>
+              <option
+                value="TYB.SC"
+                selected={selected.courseName === "TYB.SC"}
+              >
+                TYB.Sc
+              </option>
+              <option value="FYBMM" selected={selected.courseName === "FYBMM"}>
+                FYBMM
+              </option>
+              <option value="SYBMM" selected={selected.courseName === "SYBMM"}>
+                SYBMM
+              </option>
+              <option value="TYBMM" selected={selected.courseName === "TYBMM"}>
+                TYBMM
+              </option>
+              <option value="FYBFM" selected={selected.courseName === "FYBFM"}>
+                FYBFM
+              </option>
+              <option value="SYBFM" selected={selected.courseName === "SYBFM"}>
+                SYBFM
+              </option>
+              <option value="TYBFM" selected={selected.courseName === "TYBFM"}>
+                TYBFM
+              </option>
+              <option
+                value="FYB.COM"
+                selected={selected.courseName === "FYB.COM"}
+              >
+                FYB.COM
+              </option>
+              <option
+                value="SYB.COM"
+                selected={selected.courseName === "SYB.COM"}
+              >
+                SYB.COM
+              </option>
+              <option
+                value="TYB.COM"
+                selected={selected.courseName === "TYB.COM"}
+              >
+                TYB.COM
+              </option>
+              <option value="FYBBI" selected={selected.courseName === "FYBBI"}>
+                FYBBI
+              </option>
+              <option value="SYBBI" selected={selected.courseName === "SYBBI"}>
+                SYBBI
+              </option>
+              <option value="TYBBI" selected={selected.courseName === "TYBBI"}>
+                TYBBI
+              </option>
+              <option value="FYBAF" selected={selected.courseName === "FYBAF"}>
+                FYBAF
+              </option>
+              <option value="SYBAF" selected={selected.courseName === "SYBAF"}>
+                SYBAF
+              </option>
+              <option value="TYBAF" selected={selected.courseName === "TYBAF"}>
+                TYBAF
+              </option>
+              <option value="FYBCA" selected={selected.courseName === "FYBCA"}>
+                FYBCA
+              </option>
+              <option value="SYBCA" selected={selected.courseName === "SYBCA"}>
+                SYBCA
+              </option>
+              <option value="TYBCA" selected={selected.courseName === "TYBCA"}>
+                TYBCA
+              </option>
             </select>
             <label
               htmlFor="courseName"

@@ -63,33 +63,26 @@ export const studentInfo = asyncHandler(async (req, res) => {
     );
 });
 export const attendenceRecord = asyncHandler(async (req, res) => {
-  const { rollNo, enrollNo, studentsName, lecture, date, presentOrAbsent } =
-    req.body;
+  const { lecture, date, studentsCurrentAttendence } = req.body;
 
-  if (
-    [rollNo, enrollNo, studentsName, lecture, date].some(
-      (property) => property?.trim() === ""
-    )
-  ) {
+  if ([lecture, date].some((property) => property?.trim() === "")) {
     throw new ApiError(400, "All properties are required");
   }
-  const existingRecord = await StudentAttendenceData.findOne({
-    $or: [{ rollNo }, { enrollNo }, { studentsName }],
+  const existingStudent = await StudentData.findOne({
+    $or: [{ lecture }],
   });
-  if (existingRecord) {
-    throw new ApiError(
-      409,
-      "Student with rollNo enrollNo, studentsName already exists..?"
-    );
+  if (existingStudent) {
+    throw new ApiError(409, "Student with lecture, date already exists..?");
+  }
+
+  if (studentsCurrentAttendence.length === 0) {
+    throw new ApiError(400, "Array with value required");
   }
 
   const createAttendRecord = await StudentAttendenceData.create({
-    rollNo,
-    enrollNo,
-    studentsName,
     lecture,
     date,
-    presentOrAbsent,
+    studentsCurrentAttendence,
   });
   const createRecord = await StudentAttendenceData.findById(
     createAttendRecord._id

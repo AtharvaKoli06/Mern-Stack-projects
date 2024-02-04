@@ -11,7 +11,7 @@ export const getAllStudents = createAsyncThunk("get/students", async () => {
   try {
     return await axios.get("http://localhost:8000/api/v1/student/allStudents");
   } catch (error) {
-    throw new Error("Failed to fetch data");
+    throw new Error(error.message);
   }
 });
 const allStudentsSlice = createSlice({

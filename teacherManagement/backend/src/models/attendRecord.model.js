@@ -2,19 +2,6 @@ import mongoose, { Schema } from "mongoose";
 
 const attendRecordSchema = new Schema(
   {
-    rollNo: {
-      type: String,
-      required: true,
-    },
-    enrollNo: {
-      type: String,
-      required: true,
-    },
-    studentsName: {
-      type: String,
-      unique: true,
-      required: true,
-    },
     lecture: {
       type: String,
       required: true,
@@ -23,15 +10,36 @@ const attendRecordSchema = new Schema(
       type: String,
       required: true,
     },
-    presentOrAbsent: {
-      type: String,
-      required: true,
-    },
+    studentsCurrentAttendence: [
+      {
+        rollNo: {
+          type: String,
+          required: true,
+        },
+        enrollNo: {
+          type: String,
+          required: true,
+        },
+        studentsName: {
+          type: String,
+          required: true,
+        },
+        presentOrAbsent: {
+          type: Boolean,
+          required: true,
+        },
+        weekDay: {
+          type: String,
+        },
+      },
+    ],
   },
   {
     timestamps: true,
   }
 );
+
+attendRecordSchema.index({ lecture: 1 }, { unique: true });
 
 export const StudentAttendenceData = mongoose.model(
   "StudentAttendenceData",

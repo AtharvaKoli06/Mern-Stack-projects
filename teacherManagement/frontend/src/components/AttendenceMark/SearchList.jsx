@@ -4,18 +4,46 @@ import { createAttendence } from "../../redux/slices/CreateAttendenceList.slice"
 
 const SearchList = ({ attendStudent, searchData }) => {
   const dispatch = useDispatch();
-  const [isChecked, setIsChecked] = useState(false);
-  const handleIsChecked = () => {
-    setIsChecked(!isChecked);
-  };
-  console.log(attendStudent);
-  console.log(filtered);
+  const [includes, setIncludes] = useState(false);
 
+  const initialValue = Array.from(
+    { length: attendStudent.length },
+    () => false
+  );
+  const [presentOrAbsent, setPresentOrAbsent] = useState(initialValue);
+  const [filterData, setFilterData] = useState([]);
   const [Attend, setAttend] = useState({
     lecture: "",
     date: "",
-    presentOrAbsent: "",
   });
+
+  const handleIsChecked = (index) => {
+    const newPresentOrAbsentStudent = [...presentOrAbsent];
+    newPresentOrAbsentStudent[index] = !newPresentOrAbsentStudent[index];
+    setPresentOrAbsent(newPresentOrAbsentStudent);
+    const presentValue = newPresentOrAbsentStudent[index];
+    setFilterData([
+      ...filterData,
+      {
+        ...attendStudent[index],
+        presentOrAbsent: presentValue,
+        weekDay: new Date().getDay(),
+      },
+    ]);
+    setIncludes(true);
+  };
+
+  const handleAttendenceChange = (e) => {
+    e.preventDefault();
+    const { name, value } = e.target;
+    if (searchData) {
+      setAttend({
+        ...Attend,
+        [name]: value,
+        studentsCurrentAttendence: filterData,
+      });
+    }
+  };
 
   const handleAttendenceSubmit = (e) => {
     e.preventDefault();
@@ -29,18 +57,6 @@ const SearchList = ({ attendStudent, searchData }) => {
       date: "",
     });
   };
-  const handleAttendenceChange = (e) => {
-    e.preventDefault();
-    const { name, value } = e.target;
-    if (searchData) {
-      setAttend({
-        ...Attend,
-        [name]: value,
-        presentOrAbsent: isChecked.toString(),
-      });
-    }
-  };
-  console.log(Attend);
 
   return (
     <>
@@ -48,7 +64,7 @@ const SearchList = ({ attendStudent, searchData }) => {
         <div className="flex flex-wrap -mx-3 mb-5">
           <div className="w-full max-w-full px-3 mb-6 mx-auto">
             <div className="relative flex-[1_auto] flex flex-col break-words min-w-0 bg-clip-border rounded-[.95rem] bg-white m-5">
-              <div className="relative flex flex-col min-w-0 break-words border border-dashed bg-clip-border rounded-2xl border-stone-200 bg-light/30">
+              <div className="relative flex flex-col min-w-0 break-words border border-dashed bg-clip-border rounded-2xl border-stone-200 bg-light/30 shadow-lg">
                 <div className="flex-auto block py-8 pt-6 px-9">
                   <div className="overflow-x-auto">
                     <table className="w-full my-0 align-middle text-dark border-neutral-200 font-thin">
@@ -66,7 +82,7 @@ const SearchList = ({ attendStudent, searchData }) => {
                         </tr>
                       </thead>
                       <tbody>
-                        {searchData.map((data) => (
+                        {searchData.map((data, index) => (
                           <tr
                             key={data._id}
                             className="border-b font-thin text-sm border-dashed last:border-b-0"
@@ -92,15 +108,14 @@ const SearchList = ({ attendStudent, searchData }) => {
                                   className="relative w-8 h-4 transition-colors rounded-lg appearance-none cursor-pointer ring-2 ring-inset ring-slate-300 hover:ring-slate-400 after:hover:ring-slate-600 checked:hover:bg-emerald-300 checked:hover:ring-emerald-600 checked:after:hover:ring-emerald-600 checked:focus:bg-emerald-400 checked:focus:ring-emerald-700 checked:after:focus:ring-emerald-700 focus-visible:outline-none peer after:absolute after:top-0 after:left-0 after:h-4 after:w-4 after:rounded-full after:bg-white after:ring-2 after:ring-inset after:ring-slate-500 after:transition-all checked:bg-emerald-200 checked:ring-emerald-500 checked:after:left-4 checked:after:bg-white checked:after:ring-emerald-500 focus:outline-none disabled:cursor-not-allowed disabled:border-slate-200 disabled:after:ring-slate-300"
                                   type="checkbox"
                                   name="presentOrAbsent"
-                                  value={isChecked}
-                                  onChange={handleIsChecked}
+                                  value={false}
+                                  onChange={() => handleIsChecked(index)}
                                 />
                                 <label
                                   className="cursor-pointer pl-2 text-slate-500 peer-disabled:cursor-not-allowed peer-disabled:text-slate-400"
                                   htmlFor="id-c01"
                                 >
-                                  {isChecked && "P"}
-                                  {!isChecked && "A"}
+                                  {presentOrAbsent[index] ? "P" : "A"}
                                 </label>
                               </div>
                             </td>
@@ -109,16 +124,22 @@ const SearchList = ({ attendStudent, searchData }) => {
                       </tbody>
                     </table>
                   </div>
+                </div>
+                {includes && (
                   <form
                     onSubmit={handleAttendenceSubmit}
-                    className="w-full mx-auto flex gap-10 items-center justify-center text-md sm:text-lg"
+                    className="w-full mx-auto flex gap-10 items-center justify-center text-md sm:text-lg p-2"
                   >
                     <select
                       name="lecture"
                       value={Attend.lecture}
                       onChange={handleAttendenceChange}
+                      className="text-sm"
                     >
-                      <option value=";ecture-1">LECTURE-1</option>
+                      <option value="" disabled>
+                        Lecture
+                      </option>
+                      <option value="Lecture-1">LECTURE-1</option>
                       <option value="lecture-2">LECTURE-2</option>
                       <option value="lecture-3">LECTURE-3</option>
                       <option value="lecture-4">LECTURE-4</option>
@@ -130,16 +151,17 @@ const SearchList = ({ attendStudent, searchData }) => {
                       name="date"
                       value={Attend.date}
                       onChange={handleAttendenceChange}
+                      className="w-full sm:w-52 text-sm"
                     />
                     <button
                       type="submit"
-                      className="group relative h-10 w-48 overflow-hidden rounded-xl bg-green-500 text-sm font-bold text-white sm:text-lg "
+                      className="group relative sm:h-10 h-10 sm:w-48 w-72 border p-2 overflow-hidden rounded-xl bg-green-500 font-bold text-white sm:text-lg text-xs"
                     >
                       SUBMIT ATTENDENCE
                       <div className="absolute inset-0 h-full w-full scale-0 rounded-2xl transition-all duration-300 group-hover:scale-100 group-hover:bg-white/30"></div>
                     </button>
                   </form>
-                </div>
+                )}
               </div>
             </div>
           </div>

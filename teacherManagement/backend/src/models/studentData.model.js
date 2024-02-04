@@ -8,11 +8,11 @@ const studentDataSchema = new Schema(
     },
     enrollNo: {
       type: String,
+      unique: true,
       required: true,
     },
     studentsName: {
       type: String,
-      unique: true,
       required: true,
     },
     medium: {

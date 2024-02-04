@@ -7,15 +7,15 @@ import Loader from "../Loader";
 import Error from "../Error";
 
 const StudentInfo = () => {
+  const dispatch = useDispatch();
   const studentInfo = useSelector((state) => state.allStudent);
   const { loading, error, data } = studentInfo;
   const studentDetails = data?.data?.data;
 
   if (studentDetails === undefined) {
-    return <Loader size={50} error={error} />;
+    return <Error error={error} />;
   }
 
-  const dispatch = useDispatch();
   useEffect(() => {
     try {
       dispatch(getAllStudents());
