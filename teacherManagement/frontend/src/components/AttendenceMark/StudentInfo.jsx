@@ -12,10 +12,6 @@ const StudentInfo = () => {
   const { loading, error, data } = studentInfo;
   const studentDetails = data?.data?.data;
 
-  if (studentDetails === undefined) {
-    return <Error error={error} />;
-  }
-
   useEffect(() => {
     try {
       dispatch(getAllStudents());

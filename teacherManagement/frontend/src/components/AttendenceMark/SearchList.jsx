@@ -5,45 +5,64 @@ import { createAttendence } from "../../redux/slices/CreateAttendenceList.slice"
 const SearchList = ({ attendStudent, searchData }) => {
   const dispatch = useDispatch();
   const [includes, setIncludes] = useState(false);
+  const [isChecked, setIsChecked] = useState(false);
 
   const initialValue = Array.from(
     { length: attendStudent.length },
-    () => false
+    () => isChecked
   );
   const [presentOrAbsent, setPresentOrAbsent] = useState(initialValue);
-  const [filterData, setFilterData] = useState([]);
+  const [presentData, setPresentData] = useState([]);
+  const [absentData, setAbsentData] = useState([]);
+
   const [Attend, setAttend] = useState({
     lecture: "",
     date: "",
   });
 
   const handleIsChecked = (index) => {
-    const newPresentOrAbsentStudent = [...presentOrAbsent];
-    newPresentOrAbsentStudent[index] = !newPresentOrAbsentStudent[index];
-    setPresentOrAbsent(newPresentOrAbsentStudent);
-    const presentValue = newPresentOrAbsentStudent[index];
-    setFilterData([
-      ...filterData,
-      {
-        ...attendStudent[index],
-        presentOrAbsent: presentValue,
-        weekDay: new Date().getDay(),
+    const newPresentStudent = [...presentOrAbsent];
+    newPresentStudent[index] = !newPresentStudent[index];
+    setPresentOrAbsent(newPresentStudent);
+    const presentValue = newPresentStudent[index];
+    const absentValue = !newPresentStudent[index];
+
+    const { presentData, absentData } = attendStudent.reduce(
+      (acc, value, index) => {
+        if (newPresentStudent[index]) {
+          acc.presentData.push({
+            ...value,
+            present: presentValue,
+            weekDay: new Date().getDay(),
+          });
+        } else {
+          acc.absentData.push({
+            ...value,
+            absent: absentValue,
+            weekDay: new Date().getDay(),
+          });
+        }
+        return acc;
       },
-    ]);
+      { presentData: [], absentData: [] }
+    );
+    setPresentData(presentData);
+    setAbsentData(absentData);
     setIncludes(true);
   };
 
   const handleAttendenceChange = (e) => {
     e.preventDefault();
     const { name, value } = e.target;
-    if (searchData) {
-      setAttend({
-        ...Attend,
-        [name]: value,
-        studentsCurrentAttendence: filterData,
-      });
-    }
+
+    setAttend({
+      ...Attend,
+      [name]: value,
+      presentData,
+      absentData,
+    });
   };
+  console.log(Attend);
 
   const handleAttendenceSubmit = (e) => {
     e.preventDefault();
@@ -56,6 +75,8 @@ const SearchList = ({ attendStudent, searchData }) => {
       lecture: "",
       date: "",
     });
+    setPresentOrAbsent(initialValue);
+    setIsChecked((prev) => !prev);
   };
 
   return (
@@ -105,10 +126,10 @@ const SearchList = ({ attendStudent, searchData }) => {
                             <td className="p-3 pr-0 text-start">
                               <div className="relative flex flex-wrap items-center">
                                 <input
-                                  className="relative w-8 h-4 transition-colors rounded-lg appearance-none cursor-pointer ring-2 ring-inset ring-slate-300 hover:ring-slate-400 after:hover:ring-slate-600 checked:hover:bg-emerald-300 checked:hover:ring-emerald-600 checked:after:hover:ring-emerald-600 checked:focus:bg-emerald-400 checked:focus:ring-emerald-700 checked:after:focus:ring-emerald-700 focus-visible:outline-none peer after:absolute after:top-0 after:left-0 after:h-4 after:w-4 after:rounded-full after:bg-white after:ring-2 after:ring-inset after:ring-slate-500 after:transition-all checked:bg-emerald-200 checked:ring-emerald-500 checked:after:left-4 checked:after:bg-white checked:after:ring-emerald-500 focus:outline-none disabled:cursor-not-allowed disabled:border-slate-200 disabled:after:ring-slate-300"
+                                  className="relative w-8 h-4 transition-colors rounded-lg appearance-none cursor-pointer ring-2 ring-inset ring-slate-300 hover:ring-slate-400 after:hover:ring-slate-600  checked:hover:bg-emerald-300 checked:hover:ring-emerald-600 checked:after:hover:ring-emerald-600 checked:focus:bg-emerald-400 checked:focus:ring-emerald-700 checked:after:focus:ring-emerald-700 focus-visible:outline-none peer after:absolute after:top-0 after:left-0 after:h-4 after:w-4 after:rounded-full after:bg-white after:ring-2 after:ring-inset after:ring-slate-500 after:transition-all checked:bg-emerald-200 checked:ring-emerald-500 checked:after:left-4 checked:after:bg-white checked:after:ring-emerald-500 focus:outline-none disabled:cursor-not-allowed disabled:border-slate-200 disabled:after:ring-slate-300"
                                   type="checkbox"
                                   name="presentOrAbsent"
-                                  value={false}
+                                  value={isChecked}
                                   onChange={() => handleIsChecked(index)}
                                 />
                                 <label

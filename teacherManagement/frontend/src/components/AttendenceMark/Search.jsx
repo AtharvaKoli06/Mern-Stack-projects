@@ -44,12 +44,6 @@ const Search = ({ handleToggle, setSearchData, searchData }) => {
     (e) => {
       e.preventDefault();
       enrollNumber = enrollInput.current.value;
-      if (!loading && error) {
-        return <Error error={error.message} />;
-      }
-      if (loading && !students.length) {
-        return <Loader />;
-      }
       if (students) {
         if (enrollNumber >= 100) {
           const filter = students.filter(
@@ -96,19 +90,13 @@ const Search = ({ handleToggle, setSearchData, searchData }) => {
 
   const handleSelectedSearch = useCallback(
     (value) => {
-      if (loading && !students) {
-        return <Loader />;
-      } else if (students) {
-        if (value) {
-          const filtered = students.filter(
-            (option) =>
-              option.medium === value.medium &&
-              option.year === value.year &&
-              option.courseName === value.courseName
-          );
-          setSearchData(filtered);
-          handleToggle();
-        }
+      if (value) {
+        const filtered = students.filter(
+          (option) =>
+            option.year === value.year && option.courseName === value.courseName
+        );
+        setSearchData(filtered);
+        handleToggle();
       }
     },
     [students]
@@ -124,7 +112,6 @@ const Search = ({ handleToggle, setSearchData, searchData }) => {
     e.preventDefault();
     handleSelectedSearch(selected);
     setSelected({
-      medium: "",
       year: "",
       courseName: "",
     });
@@ -276,36 +263,6 @@ const Search = ({ handleToggle, setSearchData, searchData }) => {
           className="w-10/12 mx-auto grid sm:grid-cols-2 lg:grid-cols-4 place-content-center gap-5 p-2 text-lg"
           onSubmit={handleOptionsSubmit}
         >
-          <div className="relative my-6 md:w-60">
-            <select
-              id="medium"
-              name="medium"
-              value={selected.medium}
-              onChange={handleSelectChange}
-              required
-              className="peer relative h-10 w-full appearance-none border-b border-slate-200 bg-white px-4 text-sm text-slate-500 outline-none transition-all autofill:bg-white focus:border-emerald-500 focus-visible:outline-none focus:focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400"
-            >
-              <option value="" disabled>
-                degree
-              </option>
-              <option
-                value="FIRST YEAR"
-                selected={(selected.medium = "FIRST YEAR")}
-              >
-                DEGREE
-              </option>
-            </select>
-            <label
-              htmlFor="medium"
-              className="pointer-events-none absolute top-2.5 left-2 z-[1] px-2 text-sm text-slate-400 transition-all before:absolute before:top-0 before:left-0 before:z-[-1] before:block before:h-full before:w-full before:bg-white before:transition-all peer-required:after:text-pink-500 peer-required:after:content-['\00a0*'] peer-valid:-top-2 peer-valid:text-xs peer-focus:-top-2 peer-focus:text-xs peer-focus:text-emerald-500 peer-disabled:cursor-not-allowed peer-disabled:text-slate-400 peer-disabled:before:bg-transparent"
-            >
-              Select an option
-            </label>
-            <IoIosArrowDown
-              className="pointer-events-none absolute top-2.5 right-2 h-5 w-5 fill-slate-400 transition-all peer-focus:fill-emerald-500 peer-disabled:cursor-not-allowed"
-              size={30}
-            />
-          </div>
           <div className="relative my-6 md:w-60">
             <select
               name="year"

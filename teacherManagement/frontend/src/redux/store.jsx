@@ -4,6 +4,7 @@ import storage from "redux-persist/lib/storage";
 import studentSlice from "./slices/CreateStudent.slice";
 import getAllStudentsSlice from "./slices/getAllStudents.slice";
 import createAttendenceListSlice from "./slices/CreateAttendenceList.slice";
+import getAttendenceSlice from "./slices/getAllAttendence.slice";
 
 const persistconfig = {
   key: "root",
@@ -14,6 +15,7 @@ const rootReducer = combineReducers({
   student: studentSlice,
   allStudent: getAllStudentsSlice,
   attendence: createAttendenceListSlice,
+  attendenceList: getAttendenceSlice,
 });
 const persistedReducer = persistReducer(persistconfig, rootReducer);
 

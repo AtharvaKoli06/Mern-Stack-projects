@@ -10,7 +10,7 @@ const attendRecordSchema = new Schema(
       type: String,
       required: true,
     },
-    studentsCurrentAttendence: [
+    presentData: [
       {
         rollNo: {
           type: String,
@@ -24,7 +24,30 @@ const attendRecordSchema = new Schema(
           type: String,
           required: true,
         },
-        presentOrAbsent: {
+        present: {
+          type: Boolean,
+          required: true,
+        },
+        weekDay: {
+          type: String,
+        },
+      },
+    ],
+    absentData: [
+      {
+        rollNo: {
+          type: String,
+          required: true,
+        },
+        enrollNo: {
+          type: String,
+          required: true,
+        },
+        studentsName: {
+          type: String,
+          required: true,
+        },
+        absent: {
           type: Boolean,
           required: true,
         },
@@ -38,8 +61,6 @@ const attendRecordSchema = new Schema(
     timestamps: true,
   }
 );
-
-attendRecordSchema.index({ lecture: 1 }, { unique: true });
 
 export const StudentAttendenceData = mongoose.model(
   "StudentAttendenceData",

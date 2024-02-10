@@ -1,12 +1,14 @@
 import React from "react";
 import Navbar from "../components/Navbar";
-import Routers from "../router/Routers";
+import { Outlet } from "react-router-dom";
 
 const Layout = () => {
   return (
-    <div className="text-3xl text-blue-400">
+    <div className="">
       <Navbar />
-      <Routers />
+      <main>
+        <Outlet />
+      </main>
     </div>
   );
 };
