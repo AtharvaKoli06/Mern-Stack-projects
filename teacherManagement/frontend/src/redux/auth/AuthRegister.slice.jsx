@@ -2,17 +2,17 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
 const initialState = {
-  loading: false,
   data: null,
+  loading: false,
   error: "",
 };
 
-export const createStudent = createAsyncThunk(
-  "student/create",
+export const authRegister = createAsyncThunk(
+  "student/Register",
   async (data, { rejectWithValue }) => {
     try {
       return await axios.post(
-        "http://localhost:8000/api/v1/student/info",
+        "http://localhost:8000/api/v1/users/register",
         data
       );
     } catch (error) {
@@ -20,20 +20,20 @@ export const createStudent = createAsyncThunk(
     }
   }
 );
-const studentsSlice = createSlice({
-  name: "student",
+const RegisterSlice = createSlice({
+  name: "Register",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(createStudent.pending, (state) => {
+    builder.addCase(authRegister.pending, (state) => {
       state.loading = true;
     });
-    builder.addCase(createStudent.fulfilled, (state, action) => {
+    builder.addCase(authRegister.fulfilled, (state, action) => {
       state.loading = false;
       state.data = action.payload;
       state.error = "";
     });
-    builder.addCase(createStudent.rejected, (state, action) => {
+    builder.addCase(authRegister.rejected, (state, action) => {
       state.loading = false;
       state.data = [];
       state.error = action.error.message;
@@ -41,4 +41,4 @@ const studentsSlice = createSlice({
   },
 });
 
-export default studentsSlice.reducer;
+export default RegisterSlice.reducer;

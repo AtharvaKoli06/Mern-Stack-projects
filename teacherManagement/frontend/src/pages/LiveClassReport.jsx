@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { AiOutlineCheck } from "react-icons/ai";
 import Search from "../components/AttendenceReport/Search";
 import { Outlet } from "react-router-dom";
 
 const LiveClassReport = () => {
+  const [searchData, setSearchData] = useState([]);
   return (
     <>
       <div className="border w-full p-10 space-x-2">
@@ -13,9 +14,11 @@ const LiveClassReport = () => {
             ATTENDENCE REPORT
           </span>
         </div>
-        <div className="w-full border-t-2 border-b-2">{<Search />}</div>
+        <div className="w-full border-t-2 border-b-2">
+          {<Search setSearchData={setSearchData} />}
+        </div>
       </div>
-      <Outlet />
+      <Outlet context={{ searchData, setSearchData }} />
     </>
   );
 };

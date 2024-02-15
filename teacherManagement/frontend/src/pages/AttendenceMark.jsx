@@ -13,9 +13,29 @@ const AttendenceMark = () => {
   };
   const [searchData, setSearchData] = useState([]);
   const attendData = [];
-  searchData.forEach(({ _id, rollNo, enrollNo, studentsName }) => {
-    attendData.push({ _id, rollNo, enrollNo, studentsName });
-  });
+  searchData.forEach(
+    ({
+      _id,
+      rollNo,
+      enrollNo,
+      studentsName,
+      year,
+      courseName,
+      course,
+      medium,
+    }) => {
+      attendData.push({
+        _id,
+        rollNo,
+        enrollNo,
+        studentsName,
+        year,
+        courseName,
+        course,
+        medium,
+      });
+    }
+  );
 
   return (
     <>

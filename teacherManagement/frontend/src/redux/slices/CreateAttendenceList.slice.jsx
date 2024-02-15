@@ -15,7 +15,7 @@ export const createAttendence = createAsyncThunk(
         data
       );
     } catch (error) {
-      throw rejectWithValue(error.res.data);
+      return rejectWithValue(error.response.data);
     }
   }
 );

@@ -1,18 +1,23 @@
-import React from "react";
+import React, { useState } from "react";
 import { FcManager } from "react-icons/fc";
 import { MdAccountCircle } from "react-icons/md";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 const Navbar = () => {
+  const userLogin = useSelector((state) => state.Login);
+  const usersLogin = userLogin?.data?.data || "";
+
+  const { data } = usersLogin || "";
+  const { user } = data || "";
+
   return (
     <div className="w-full bg-slate-300">
       <div className="flex items-center justify-around">
         <div className="flex items-center">
           <FcManager size={50} />
           <div>
-            <h1 className="text-lg md:text-4xl text-green-900 ">
-              Teacher_Management
-            </h1>
+            <h1 className="text-lg md:text-4xl text-green-900 ">Teacher</h1>
           </div>
         </div>
         <div className="p-2 sm:w-2/4">
@@ -26,6 +31,14 @@ const Navbar = () => {
             <Link to="/guide" className="cursor-pointer hover:underline">
               Guide
             </Link>
+            {user.username && (
+              <Link
+                to={`${user.username}/features`}
+                className="cursor-pointer hover:underline"
+              >
+                Features
+              </Link>
+            )}
           </ul>
         </div>
         <div className="float-right text-xs sm:text-3xl">
@@ -35,16 +48,31 @@ const Navbar = () => {
             </span>
             <div className="absolute top-5 shadow-lg rounded-md right-1 p-2 z-50 hidden group-hover:block text-black bg-white w-[150px] border">
               <ul className="grid lg:grid-cols-1">
-                <Link to="/register">
-                  <li className="inline-block p-2 text-xs hover:bg-purple-200 w-full rounded-md">
-                    NEW!! REGISTER
-                  </li>
-                </Link>
-                <Link to="/login">
-                  <li className="inline-block p-2 text-xs hover:bg-purple-200 w-full rounded-md">
-                    LOGIN
-                  </li>
-                </Link>
+                {user ? (
+                  <Link
+                    to="/logout"
+                    state={{
+                      usersLogin: data,
+                    }}
+                  >
+                    <li className="inline-block p-2 text-xs hover:bg-purple-200 w-full rounded-md">
+                      LOGOUT
+                    </li>
+                  </Link>
+                ) : (
+                  <>
+                    <Link to="/register">
+                      <li className="inline-block p-2 text-xs hover:bg-purple-200 w-full rounded-md">
+                        NEW!! REGISTER
+                      </li>
+                    </Link>
+                    <Link to="/login">
+                      <li className="inline-block p-2 text-xs hover:bg-purple-200 w-full rounded-md">
+                        LOGIN
+                      </li>
+                    </Link>
+                  </>
+                )}
               </ul>
             </div>
           </li>

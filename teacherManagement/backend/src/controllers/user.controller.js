@@ -23,24 +23,31 @@ const generateAccessAndRefreshTokens = async (userId) => {
 };
 
 const registerUser = asyncHandler(async (req, res) => {
-  const { email, username, password } = req.body;
+  const { username, password } = req.body;
 
-  if ([email, username, password].some((field) => field?.trim() === "")) {
-    throw new ApiError(400, "All fields are required");
+  if (
+    [username, password].some(
+      (field) =>
+        field?.trim() === "" || (username.length <= 2 && password.length <= 8)
+    )
+  ) {
+    throw new ApiError(
+      400,
+      "All fields are required with minimum 3 characters"
+    );
   }
 
   const existedUser = await User.findOne({
-    $or: [{ username }, { email }],
+    $or: [{ username }],
   });
 
   if (existedUser) {
-    throw new ApiError(409, "User with email or username already exists");
+    throw new ApiError(409, "User with username already exists");
   }
 
   const user = await User.create({
-    email,
     password,
-    username: username.toLowerCase(),
+    username,
   });
 
   const createdUser = await User.findById(user._id).select(
@@ -57,15 +64,19 @@ const registerUser = asyncHandler(async (req, res) => {
 });
 
 const loginUser = asyncHandler(async (req, res) => {
-  const { email, username, password } = req.body;
-  console.log(email);
+  const { username, year, password } = req.body;
 
-  if (!username && !email) {
-    throw new ApiError(400, "username or email is required");
+  const behindDate = new Date().getFullYear - 1;
+
+  if (!username && !year) {
+    throw new ApiError(400, "username and year is required");
+  }
+  if (year === behindDate) {
+    throw new ApiError(400, "you have defined last year");
   }
 
   const user = await User.findOne({
-    $or: [{ username }, { email }],
+    $or: [{ username }],
   });
 
   if (!user) {

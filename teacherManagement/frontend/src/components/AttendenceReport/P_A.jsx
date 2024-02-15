@@ -1,12 +1,12 @@
 import React from "react";
 
-const AbsentList = ({ student }) => {
-  const { rollNo, enrollNo, studentsName, presentOrAbsent, weekDay } = student;
-  let present;
-  if (presentOrAbsent) {
-    present = "PRESENT";
+const P_A = ({ student }) => {
+  const { rollNo, enrollNo, studentsName, present, weekDay } = student;
+  let presentStudent;
+  if (present) {
+    presentStudent = "PRESENT";
   } else {
-    present = "ABSENT";
+    presentStudent = "ABSENT";
   }
   return (
     <>
@@ -28,7 +28,7 @@ const AbsentList = ({ student }) => {
         </td>
         <td className="p-3 pr-0 text-center">
           <span className="font-semibold text-light-inverse text-md/normal">
-            <h1 className="sn:text-sm text-xs">{present}</h1>
+            <h1 className="sn:text-sm text-xs">{presentStudent}</h1>
           </span>
         </td>
         <td className="p-3 pr-0 text-center">
@@ -41,4 +41,4 @@ const AbsentList = ({ student }) => {
   );
 };
 
-export default AbsentList;
+export default P_A;

@@ -5,6 +5,10 @@ import studentSlice from "./slices/CreateStudent.slice";
 import getAllStudentsSlice from "./slices/getAllStudents.slice";
 import createAttendenceListSlice from "./slices/CreateAttendenceList.slice";
 import getAttendenceSlice from "./slices/getAllAttendence.slice";
+import LoginSlice from "./auth/AuthLogin.slice";
+import RegisterSlice from "./auth/AuthRegister.slice";
+import refreshToken from "../redux/auth/AuthRefreshToken.slice";
+import LogoutSlice from "./auth/AuthLogout.slice";
 
 const persistconfig = {
   key: "root",
@@ -12,10 +16,14 @@ const persistconfig = {
 };
 
 const rootReducer = combineReducers({
-  student: studentSlice,
   allStudent: getAllStudentsSlice,
   attendence: createAttendenceListSlice,
+  student: studentSlice,
   attendenceList: getAttendenceSlice,
+  Login: LoginSlice,
+  Register: RegisterSlice,
+  RefreshToken: refreshToken,
+  Logout: LogoutSlice,
 });
 const persistedReducer = persistReducer(persistconfig, rootReducer);
 

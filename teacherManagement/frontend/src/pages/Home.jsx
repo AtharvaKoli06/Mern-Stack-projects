@@ -1,10 +1,10 @@
 import React from "react";
-import Features from "../components/features";
+import Welcome from "../components/Welcome";
 
 const Home = () => {
   return (
     <>
-      <Features />
+      <Welcome />
     </>
   );
 };

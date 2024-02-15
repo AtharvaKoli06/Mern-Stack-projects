@@ -1,13 +1,14 @@
 import React from "react";
-import Layout from "./pages/Layout";
-import { RouterProvider } from "react-router-dom";
+import Routers from "./router/Routers";
 
-import router from "./router/Routers.jsx";
+import { BrowserRouter } from "react-router-dom";
 
 const App = () => {
   return (
     <>
-      <RouterProvider router={router} />
+      <BrowserRouter>
+        <Routers />
+      </BrowserRouter>
     </>
   );
 };

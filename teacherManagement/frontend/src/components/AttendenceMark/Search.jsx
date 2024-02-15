@@ -6,8 +6,6 @@ import { MdOutlineIntegrationInstructions } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import { createStudent } from "../../redux/slices/CreateStudent.slice";
 import { IoIosArrowDown } from "react-icons/io";
-import Loader from "../Loader";
-import Error from "../Error";
 
 const Search = ({ handleToggle, setSearchData, searchData }) => {
   const dispatch = useDispatch();
@@ -16,11 +14,6 @@ const Search = ({ handleToggle, setSearchData, searchData }) => {
     year: "",
     courseName: "",
   });
-  // const attendanceOptions = {
-  //   present: "Present",
-  //   absent: "Absent",
-  //   late: "Late",
-  // };
   const [formData, setFormData] = useState({
     rollNo: "",
     enrollNo: "",
@@ -50,7 +43,6 @@ const Search = ({ handleToggle, setSearchData, searchData }) => {
             (field) => field.enrollNo === enrollNumber
           );
           setSearchData(filter);
-          console.log(searchData);
           handleToggle();
         }
       }

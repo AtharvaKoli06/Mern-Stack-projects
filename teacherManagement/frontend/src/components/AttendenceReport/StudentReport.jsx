@@ -5,33 +5,24 @@ import ReportList from "../AttendenceReport/ReportList";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllAttendenceList } from "../../redux/slices/getAllAttendence.slice";
+import { useOutletContext } from "react-router-dom";
 
 const StudentReport = () => {
   const dispatch = useDispatch();
+
   const { loading, data, error } = useSelector((state) => state.attendenceList);
-  const attendenceList = data?.data?.data;
+  let attendenceList = data?.data?.data;
 
   useEffect(() => {
     dispatch(getAllAttendenceList());
   }, [dispatch]);
+  const { searchData } = useOutletContext();
+  if (searchData.length) {
+    attendenceList = searchData;
+  }
 
   return (
     <>
-      <div className="w-full flex justify-around gap-5 items-center mt-2">
-        <div className="text-center w-3/4 sm:w-2/4">
-          <h1 className="text-xs sm:text-sm">
-            Degree-BACHELOR OF COMPUTER APPLICATION-TYBCA-THIRD YEAR-A - (97)
-          </h1>
-        </div>
-        <div>
-          <button
-            type="submit"
-            className="bg-green-400 rounded-md text-xs sm:text-sm p-2"
-          >
-            Export
-          </button>
-        </div>
-      </div>
       <div className="flex flex-wrap -mx-3 mb-5 w-full">
         <div className="w-full max-w-full px-3 mb-6 mx-auto">
           <div className="relative flex-[1_auto] flex flex-col break-words min-w-0 bg-clip-border rounded-[.95rem] bg-white m-5">
@@ -46,6 +37,12 @@ const StudentReport = () => {
                         </th>
                         <th className="pb-3 text-xs sm:text-sm text-center w-40 sm:min-w-[150px]">
                           DATE
+                        </th>
+                        <th className="pb-3 text-xs sm:text-sm text-center w-40 sm:min-w-[150px]">
+                          Year
+                        </th>
+                        <th className="pb-3 text-xs sm:text-sm text-center w-40 sm:min-w-[150px]">
+                          CourseName
                         </th>
                         <th className="pb-3 text-xs sm:text-sm text-center w-80 sm:min-w-[365px]">
                           Present Student's List

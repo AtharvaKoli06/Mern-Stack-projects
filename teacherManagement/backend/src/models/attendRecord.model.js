@@ -10,6 +10,14 @@ const attendRecordSchema = new Schema(
       type: String,
       required: true,
     },
+    year: {
+      type: String,
+      required: true,
+    },
+    courseName: {
+      type: String,
+      required: true,
+    },
     presentData: [
       {
         rollNo: {
@@ -30,6 +38,22 @@ const attendRecordSchema = new Schema(
         },
         weekDay: {
           type: String,
+        },
+        course: {
+          type: String,
+          required: true,
+        },
+        courseName: {
+          type: String,
+          required: true,
+        },
+        medium: {
+          type: String,
+          required: true,
+        },
+        year: {
+          type: String,
+          required: true,
         },
       },
     ],
@@ -53,6 +77,22 @@ const attendRecordSchema = new Schema(
         },
         weekDay: {
           type: String,
+        },
+        course: {
+          type: String,
+          required: true,
+        },
+        courseName: {
+          type: String,
+          required: true,
+        },
+        medium: {
+          type: String,
+          required: true,
+        },
+        year: {
+          type: String,
+          required: true,
         },
       },
     ],

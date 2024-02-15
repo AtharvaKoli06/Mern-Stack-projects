@@ -12,13 +12,6 @@ const userSchema = new Schema(
       trim: true,
       index: true,
     },
-    email: {
-      type: String,
-      required: true,
-      unique: true,
-      lowercase: true,
-      trim: true,
-    },
     password: {
       type: String,
       required: [true, "Password is required"],
@@ -47,7 +40,6 @@ userSchema.methods.generateAccessToken = function () {
   return jwt.sign(
     {
       _id: this._id,
-      email: this.email,
       username: this.username,
     },
     process.env.ACCESS_TOKEN_SECRET,

@@ -2,17 +2,17 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
 const initialState = {
-  loading: false,
   data: null,
+  loading: false,
   error: "",
 };
 
-export const createStudent = createAsyncThunk(
-  "student/create",
+export const authLogout = createAsyncThunk(
+  "student/Logout",
   async (data, { rejectWithValue }) => {
     try {
       return await axios.post(
-        "http://localhost:8000/api/v1/student/info",
+        "http://localhost:8000/api/v1/users/logout",
         data
       );
     } catch (error) {
@@ -20,20 +20,20 @@ export const createStudent = createAsyncThunk(
     }
   }
 );
-const studentsSlice = createSlice({
-  name: "student",
+const LogoutSlice = createSlice({
+  name: "Logout",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(createStudent.pending, (state) => {
+    builder.addCase(authLogout.pending, (state) => {
       state.loading = true;
     });
-    builder.addCase(createStudent.fulfilled, (state, action) => {
+    builder.addCase(authLogout.fulfilled, (state, action) => {
       state.loading = false;
       state.data = action.payload;
       state.error = "";
     });
-    builder.addCase(createStudent.rejected, (state, action) => {
+    builder.addCase(authLogout.rejected, (state, action) => {
       state.loading = false;
       state.data = [];
       state.error = action.error.message;
@@ -41,4 +41,4 @@ const studentsSlice = createSlice({
   },
 });
 
-export default studentsSlice.reducer;
+export default LogoutSlice.reducer;

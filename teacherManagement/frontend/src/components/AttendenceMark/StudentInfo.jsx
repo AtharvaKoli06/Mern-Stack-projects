@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import AttendenceList from "../AttendenceMark/AttendenceList";
+import AttendenceList from "./AttendenceList";
 import { useSelector, useDispatch } from "react-redux";
 import { getAllStudents } from "../../redux/slices/getAllStudents.slice";
 

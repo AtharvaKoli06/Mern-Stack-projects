@@ -63,15 +63,21 @@ export const studentInfo = asyncHandler(async (req, res) => {
     );
 });
 export const attendenceRecord = asyncHandler(async (req, res) => {
-  const { lecture, date, presentData, absentData } = req.body;
+  const { lecture, date, year, courseName, presentData, absentData } = req.body;
 
-  if ([lecture, date].some((property) => property?.trim() === "")) {
+  if (
+    [lecture, date, year, courseName].some(
+      (property) => property?.trim() === ""
+    )
+  ) {
     throw new ApiError(400, "All properties are required");
   }
 
   const createAttendRecord = await StudentAttendenceData.create({
     lecture,
     date,
+    year,
+    courseName,
     presentData,
     absentData,
   });

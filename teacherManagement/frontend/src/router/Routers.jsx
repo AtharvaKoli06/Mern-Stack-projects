@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  Routes,
-  Route,
-  createBrowserRouter,
-  createRoutesFromElements,
-} from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import Layout from "../pages/Layout";
 import Home from "../pages/Home";
 import About from "../pages/About";
@@ -27,18 +22,25 @@ import Reports from "../pages/Reports";
 import TimeTable from "../pages/TimeTable";
 import Lists from "../components/AttendenceReport/Lists";
 import DailyReport from "../pages/DailyReport";
-import StudentReport from "../components/AttendenceReport/StudentReport";
+import Register from "../pages/Register";
+import Login from "../pages/Login";
+import RequireAuth from "../redux/auth/RequireAuth";
+import Features from "../components/Features";
+import Logout from "../pages/Logout";
 
-const routers = createBrowserRouter(
-  createRoutesFromElements(
+const Routers = () => (
+  <Routes>
     <Route path="/" element={<Layout />}>
+      <Route path="register" element={<Register />} />
       <Route index element={<Home />} />
+      <Route path="login" element={<Login />} />
+      <Route path="logout" element={<Logout />} />
       <Route path="about" element={<About />} />
       <Route path="guide" element={<Guide />} />
       <Route path="mark-attendence" element={<AttendenceMark />} />
-      <Route path="live-class-attendence-report" element={<LiveClassReport />}>
-        <Route index element={<StudentReport />} />
-        <Route path="lists/:data" element={<Lists />} />
+      <Route path="live-class-attendence-report" element={<RequireAuth />}>
+        <Route index element={<LiveClassReport />} />
+        <Route path="lists" element={<Lists />} />
       </Route>
       <Route path="delete-attendence" element={<DeleteAttendence />} />
       <Route path="show-attendence" element={<ShowAttendence />} />
@@ -55,7 +57,11 @@ const routers = createBrowserRouter(
       <Route path="daily-report" element={<DailyReport />} />
       <Route path="activity" element={<Reports />} />
       <Route path="timetable" element={<TimeTable />} />
+      <Route element={<RequireAuth />}>
+        <Route path="/:name/features" element={<Features />} />
+      </Route>
     </Route>
-  )
+  </Routes>
 );
-export default routers;
+
+export default Routers;

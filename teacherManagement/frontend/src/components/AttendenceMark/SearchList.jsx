@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { createAttendence } from "../../redux/slices/CreateAttendenceList.slice";
 
@@ -29,9 +29,14 @@ const SearchList = ({ attendStudent, searchData }) => {
 
     const { presentData, absentData } = attendStudent.reduce(
       (acc, value, index) => {
+        const { course, medium, courseName, year } = value;
         if (newPresentStudent[index]) {
           acc.presentData.push({
             ...value,
+            course,
+            medium,
+            courseName,
+            year,
             present: presentValue,
             weekDay: new Date().getDay(),
           });
@@ -54,10 +59,15 @@ const SearchList = ({ attendStudent, searchData }) => {
   const handleAttendenceChange = (e) => {
     e.preventDefault();
     const { name, value } = e.target;
-
+    const yearCourseName = [];
+    attendStudent.forEach(({ year, courseName }) => {
+      yearCourseName.push({ year, courseName });
+    });
     setAttend({
       ...Attend,
       [name]: value,
+      year: yearCourseName[0].year,
+      courseName: yearCourseName[1].courseName,
       presentData,
       absentData,
     });
@@ -97,8 +107,10 @@ const SearchList = ({ attendStudent, searchData }) => {
                           <th className="pb-3 text-start min-w-[30px]">
                             Enroll No.
                           </th>
-                          <th className="pb-3 text-start min-w-[50px] ">
-                            Student's Name
+                          <th className="pb-3 text-start">Student's Name</th>
+                          <th className="pb-3 text-start min-w-[30px]">Year</th>
+                          <th className="pb-3 text-start min-w-[30px]">
+                            courseName
                           </th>
                         </tr>
                       </thead>
@@ -119,14 +131,25 @@ const SearchList = ({ attendStudent, searchData }) => {
                               </span>
                             </td>
                             <td className="p-3 pr-0 text-start">
-                              <span className="text-center align-baseline inline-flex px-2 py-1 mr-auto items-center font-semibold text-base/none text-success bg-success-light rounded-lg">
+                              <span className="font-semibold text-light-inverse text-md/normal">
                                 {data.studentsName}
+                              </span>
+                            </td>
+                            <td className="p-3 pr-0 text-start">
+                              <span className="font-semibold text-light-inverse text-md/normal">
+                                {data.year}
+                              </span>
+                            </td>
+                            <td className="p-3 pr-0 text-start">
+                              <span className="font-semibold text-light-inverse text-md/normal">
+                                {data.courseName}
                               </span>
                             </td>
                             <td className="p-3 pr-0 text-start">
                               <div className="relative flex flex-wrap items-center">
                                 <input
-                                  className="relative w-8 h-4 transition-colors rounded-lg appearance-none cursor-pointer ring-2 ring-inset ring-slate-300 hover:ring-slate-400 after:hover:ring-slate-600  checked:hover:bg-emerald-300 checked:hover:ring-emerald-600 checked:after:hover:ring-emerald-600 checked:focus:bg-emerald-400 checked:focus:ring-emerald-700 checked:after:focus:ring-emerald-700 focus-visible:outline-none peer after:absolute after:top-0 after:left-0 after:h-4 after:w-4 after:rounded-full after:bg-white after:ring-2 after:ring-inset after:ring-slate-500 after:transition-all checked:bg-emerald-200 checked:ring-emerald-500 checked:after:left-4 checked:after:bg-white checked:after:ring-emerald-500 focus:outline-none disabled:cursor-not-allowed disabled:border-slate-200 disabled:after:ring-slate-300"
+                                  className={`relative w-8 h-4 transition-colors rounded-lg appearance-none cursor-pointer ring-2 ring-inset ring-slate-300 hover:ring-slate-400 after:hover:ring-slate-600
+                                    'checked:hover:bg-emerald-300 checked:hover:ring-emerald-600 checked:after:hover:ring-emerald-600 checked:focus:bg-emerald-400 checked:focus:ring-emerald-700 checked:after:focus:ring-emerald-700 checked:bg-emerald-200 checked:ring-emerald-500 checked:after:left-4 checked:after:bg-white checked:after:ring-emerald-500 focus:outline-none disabled:cursor-not-allowed disabled:border-slate-200 disabled:after:ring-slate-300 focus-visible:outline-none peer after:absolute after:top-0 after:left-0 after:h-4 after:w-4 after:rounded-full after:bg-white after:ring-2 after:ring-inset after:ring-slate-500 after:transition-all `}
                                   type="checkbox"
                                   name="presentOrAbsent"
                                   value={isChecked}
