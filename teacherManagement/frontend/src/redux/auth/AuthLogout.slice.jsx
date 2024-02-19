@@ -1,19 +1,31 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
+import { clearPersistedState } from "./PresistedState";
+
 const initialState = {
   data: null,
   loading: false,
-  error: "",
+  error: null,
+};
+const removeToken = () => {
+  const axiosInstance = axios.create();
+  delete axiosInstance.defaults.headers.common["Authorization"];
+  localStorage.removeItem("token");
 };
 
 export const authLogout = createAsyncThunk(
   "student/Logout",
-  async (data, { rejectWithValue }) => {
+  async (accessToken, { rejectWithValue }) => {
     try {
       return await axios.post(
         "http://localhost:8000/api/v1/users/logout",
-        data
+        null,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken} `,
+          },
+        }
       );
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -32,10 +44,12 @@ const LogoutSlice = createSlice({
       state.loading = false;
       state.data = action.payload;
       state.error = "";
+      removeToken();
+      clearPersistedState();
     });
     builder.addCase(authLogout.rejected, (state, action) => {
       state.loading = false;
-      state.data = [];
+      state.data = null;
       state.error = action.error.message;
     });
   },

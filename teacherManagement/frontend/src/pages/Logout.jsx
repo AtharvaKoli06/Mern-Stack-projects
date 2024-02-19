@@ -7,28 +7,39 @@ import { authLogout } from "../redux/auth/AuthLogout.slice";
 const Logout = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  // const [data, setData] = useState(null);
 
   const userLogout = useSelector((state) => state.Logout);
-  const { error } = userLogout;
+  const { error, data, loading } = userLogout;
+  console.log(data);
 
-  const userData = location.state?.usersLogin || "";
-  const { user, accessToken } = userData || "";
+  const userData = location.state?.usersLogin;
+  const message = location.state?.userMessage;
+  const success = location.state?.userSuccess;
+  console.log(userData);
+
+  const { user, accessToken } = userData ?? { user: null, accessToken: null };
+
   const dispatch = useDispatch();
 
   const [errors, setErrors] = useState("");
 
-  const handleLogOut = () => {
-    dispatch(authLogout({ user, accessToken }));
+  const handleLogOut = async () => {
+    try {
+      dispatch(authLogout(accessToken));
+    } catch (error) {
+      setErrors("An error occurred during logout.", error);
+    }
     const hasErrors = Object.values(error).some((errors) => errors !== "");
     if (hasErrors) {
-      setErrors(error);
+      setErrors("An error occurred during logout.", error);
       return;
     }
     if (user.username && !error) {
       navigate("/");
     }
-    alert(message);
+    if (success) {
+      alert(message);
+    }
   };
   return (
     <div className="h-screen bg-black flex items-center justify-center">
@@ -50,7 +61,7 @@ const Logout = () => {
           <Link
             type="button"
             className="py-2.5 px-4 inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-semibold bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all text-sm"
-            to={`/${user.username}/features`}
+            to={user ? `/${user.username}/features` : null}
           >
             Cancel
           </Link>

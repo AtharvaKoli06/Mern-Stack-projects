@@ -10,7 +10,8 @@ const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [year, setYear] = useState("");
-  const [errorMsg, setErrorMsg] = useState("");
+  const [errors, setErrors] = useState("");
+
   const [onSuccess, setOnSuccess] = useState("");
 
   const dataLogin = useSelector((state) => state.Login);
@@ -29,20 +30,32 @@ const Login = () => {
       setPassword("");
       setYear("");
     } catch (error) {
-      setErrorMsg("An error occurred. Please try again.");
+      setErrors("An error occurred during User Login", error);
+    }
+    const hasErrors = Object.values(error).some(
+      (errorsMsg) => errorsMsg !== ""
+    );
+    if (hasErrors) {
+      setErrors("An error occurred during User Login", error);
+      return;
     }
     if (userDetails?.success) {
       setOnSuccess(userDetails.message);
       navigate(`/${user}/features`);
     }
-    if (!error) {
-      alert(userDetails.message);
-    }
+
+    alert(error ? error : userDetails?.message);
   };
 
-  const handleUserInput = (e) => setUsername(e.target.value);
-  const handlePasswordInput = (e) => setPassword(e.target.value);
-  const handleYearSelect = (e) => setYear(e.target.value);
+  const handleUserInput = (e) => {
+    setUsername(e.target.value);
+  };
+  const handlePasswordInput = (e) => {
+    setPassword(e.target.value);
+  };
+  const handleYearSelect = (e) => {
+    setYear(e.target.value);
+  };
 
   const years = Array.from(
     { length: 101 },
@@ -53,7 +66,7 @@ const Login = () => {
     <Loader size={50} />
   ) : (
     <form className="my-6" onSubmit={handleSubmit}>
-      <p className="text-red-500">{error}</p>
+      {error && <p className="text-red-500">{error}</p>}
       <select
         value={year}
         className="p-2 my-2 rounded w-[100%] focus:outline-blue-600"
@@ -66,6 +79,7 @@ const Login = () => {
           </option>
         ))}
       </select>
+
       <input
         className="p-2 my-2 rounded w-[100%] focus:outline-blue-600"
         placeholder="Username..."
@@ -101,7 +115,7 @@ const Login = () => {
         </div>
         {content}
         <div className="flex justify-around items-center w-full border">
-          {errorMsg && (
+          {errors && (
             <Link
               to="/register"
               className="text-md text-green-500 hover:underline"

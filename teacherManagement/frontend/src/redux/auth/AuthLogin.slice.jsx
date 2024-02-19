@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import { authLogout } from "./AuthLogout.slice";
 
 const initialState = {
   data: null,
@@ -34,6 +35,9 @@ const LoginSlice = createSlice({
       state.loading = false;
       state.data = [];
       state.error = action.error.message;
+    });
+    builder.addCase(authLogout.fulfilled, (state) => {
+      state.data = null;
     });
   },
 });

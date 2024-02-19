@@ -5,9 +5,9 @@ import ReportList from "../AttendenceReport/ReportList";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllAttendenceList } from "../../redux/slices/getAllAttendence.slice";
-import { useOutletContext } from "react-router-dom";
 
 const StudentReport = () => {
+  const location = useLocation();
   const dispatch = useDispatch();
 
   const { loading, data, error } = useSelector((state) => state.attendenceList);
@@ -16,8 +16,10 @@ const StudentReport = () => {
   useEffect(() => {
     dispatch(getAllAttendenceList());
   }, [dispatch]);
-  const { searchData } = useOutletContext();
-  if (searchData.length) {
+
+  const searchData = location.state?.studentData;
+
+  if (searchData?.length) {
     attendenceList = searchData;
   }
 
@@ -44,10 +46,10 @@ const StudentReport = () => {
                         <th className="pb-3 text-xs sm:text-sm text-center w-40 sm:min-w-[150px]">
                           CourseName
                         </th>
-                        <th className="pb-3 text-xs sm:text-sm text-center w-80 sm:min-w-[365px]">
+                        <th className="pb-3 text-xs sm:text-sm text-center w-80 sm:min-w-[165px]">
                           Present Student's List
                         </th>
-                        <th className="pb-3 text-xs sm:text-sm text-center w-80 sm:min-w-[365px]">
+                        <th className="pb-3 text-xs sm:text-sm text-center w-80 sm:min-w-[165px]">
                           Absent Student's List
                         </th>
                       </tr>

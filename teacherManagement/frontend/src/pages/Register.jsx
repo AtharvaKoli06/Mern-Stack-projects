@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { GiArchiveRegister } from "react-icons/gi";
@@ -11,14 +11,16 @@ const Register = () => {
     username: "",
     password: "",
   });
-  const [errors, setErrors] = useState({});
+  const [errorsMsg, setErrorsMsg] = useState({});
+  const [errors, setErrors] = useState("");
 
   const { loading, error, data } = useSelector((state) => state.Register);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   let status = data?.data;
-  let { message, success } = status;
+  let message = status?.message;
+  let success = status?.success;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -50,32 +52,36 @@ const Register = () => {
       default:
         break;
     }
-    setErrors((prevErrors) => ({ ...prevErrors, [name]: error }));
+    setErrorsMsg((prevErrors) => ({ ...prevErrors, [name]: error }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const hasErrors = Object.values(errors).some((error) => error !== "");
-    if (hasErrors) {
+    try {
+      dispatch(authRegister(formData));
+    } catch (error) {
+      setErrors("An error occurred during User register", message);
+    }
+    if (error) {
+      setErrors("An error occurred during User register2", message);
       return;
     }
-    dispatch(authRegister(formData));
     setFormData({
       username: "",
       password: "",
     });
-    if (success && status.data) {
+    if (success && status.data && !error) {
       navigate("/login");
       success = false;
     }
-    alert(message);
+    alert(error ? error : message);
   };
 
   const content = loading ? (
     <Loader size={50} />
   ) : (
     <form className="my-6" onSubmit={handleSubmit}>
-      {error && <p className="text-red-500">{error}</p>}
+      {errors && <p className="text-red-500">{errors}</p>}
       <input
         className="p-2 my-2 rounded w-[100%] focus:outline-blue-600"
         placeholder="username..."
@@ -86,7 +92,9 @@ const Register = () => {
         autoComplete="off"
         required
       />
-      {errors.username && <p className="text-red-500">{errors.username}</p>}
+      {errorsMsg.username && (
+        <p className="text-red-500">{errorsMsg.username}</p>
+      )}
       <input
         className="p-2 my-2 rounded w-[100%] focus:outline-blue-600"
         placeholder="Password"
@@ -96,7 +104,9 @@ const Register = () => {
         onChange={handleChange}
         required
       />
-      {errors.password && <p className="text-red-500">{errors.password}</p>}
+      {errorsMsg.password && (
+        <p className="text-red-500">{errorsMsg.password}</p>
+      )}
       <button
         type="submit"
         className="bg-blue-600 hover:bg-blue-500 text-white font-semibold p-2 mt-3 rounded w-[100%]"

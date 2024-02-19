@@ -1,14 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { createAttendence } from "../../redux/slices/CreateAttendenceList.slice";
+import { useLocation } from "react-router-dom";
 
-const SearchList = ({ attendStudent, searchData }) => {
+const SearchList = () => {
   const dispatch = useDispatch();
   const [includes, setIncludes] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
 
+  const location = useLocation();
+  const searchData = location.state?.studentData;
+
   const initialValue = Array.from(
-    { length: attendStudent.length },
+    { length: searchData?.length },
     () => isChecked
   );
   const [presentOrAbsent, setPresentOrAbsent] = useState(initialValue);
@@ -27,7 +31,7 @@ const SearchList = ({ attendStudent, searchData }) => {
     const presentValue = newPresentStudent[index];
     const absentValue = !newPresentStudent[index];
 
-    const { presentData, absentData } = attendStudent.reduce(
+    const { presentData, absentData } = searchData.reduce(
       (acc, value, index) => {
         const { course, medium, courseName, year } = value;
         if (newPresentStudent[index]) {
@@ -72,7 +76,6 @@ const SearchList = ({ attendStudent, searchData }) => {
       absentData,
     });
   };
-  console.log(Attend);
 
   const handleAttendenceSubmit = (e) => {
     e.preventDefault();
@@ -115,56 +118,67 @@ const SearchList = ({ attendStudent, searchData }) => {
                         </tr>
                       </thead>
                       <tbody>
-                        {searchData.map((data, index) => (
-                          <tr
-                            key={data._id}
-                            className="border-b font-thin text-sm border-dashed last:border-b-0"
-                          >
-                            <td className="p-3 pl-0">
-                              <div className="flex items-center">
-                                {data.rollNo}
-                              </div>
-                            </td>
-                            <td className="p-3 pr-0 text-start">
-                              <span className="font-semibold text-light-inverse text-md/normal">
-                                {data.enrollNo}
-                              </span>
-                            </td>
-                            <td className="p-3 pr-0 text-start">
-                              <span className="font-semibold text-light-inverse text-md/normal">
-                                {data.studentsName}
-                              </span>
-                            </td>
-                            <td className="p-3 pr-0 text-start">
-                              <span className="font-semibold text-light-inverse text-md/normal">
-                                {data.year}
-                              </span>
-                            </td>
-                            <td className="p-3 pr-0 text-start">
-                              <span className="font-semibold text-light-inverse text-md/normal">
-                                {data.courseName}
-                              </span>
-                            </td>
-                            <td className="p-3 pr-0 text-start">
-                              <div className="relative flex flex-wrap items-center">
-                                <input
-                                  className={`relative w-8 h-4 transition-colors rounded-lg appearance-none cursor-pointer ring-2 ring-inset ring-slate-300 hover:ring-slate-400 after:hover:ring-slate-600
+                        {searchData && searchData?.length > 0 ? (
+                          searchData.map((data, index) => (
+                            <tr
+                              key={data._id}
+                              className="border-b font-thin text-sm border-dashed last:border-b-0"
+                            >
+                              <td className="p-3 pl-0">
+                                <div className="flex items-center">
+                                  {data.rollNo}
+                                </div>
+                              </td>
+                              <td className="p-3 pr-0 text-start">
+                                <span className="font-semibold text-light-inverse text-md/normal">
+                                  {data.enrollNo}
+                                </span>
+                              </td>
+                              <td className="p-3 pr-0 text-start">
+                                <span className="font-semibold text-light-inverse text-md/normal">
+                                  {data.studentsName}
+                                </span>
+                              </td>
+                              <td className="p-3 pr-0 text-start">
+                                <span className="font-semibold text-light-inverse text-md/normal">
+                                  {data.year}
+                                </span>
+                              </td>
+                              <td className="p-3 pr-0 text-start">
+                                <span className="font-semibold text-light-inverse text-md/normal">
+                                  {data.courseName}
+                                </span>
+                              </td>
+                              <td className="p-3 pr-0 text-start">
+                                <div className="relative flex flex-wrap items-center">
+                                  <input
+                                    className={`relative w-8 h-4 transition-colors rounded-lg appearance-none cursor-pointer ring-2 ring-inset ring-slate-300 hover:ring-slate-400 after:hover:ring-slate-600
                                     'checked:hover:bg-emerald-300 checked:hover:ring-emerald-600 checked:after:hover:ring-emerald-600 checked:focus:bg-emerald-400 checked:focus:ring-emerald-700 checked:after:focus:ring-emerald-700 checked:bg-emerald-200 checked:ring-emerald-500 checked:after:left-4 checked:after:bg-white checked:after:ring-emerald-500 focus:outline-none disabled:cursor-not-allowed disabled:border-slate-200 disabled:after:ring-slate-300 focus-visible:outline-none peer after:absolute after:top-0 after:left-0 after:h-4 after:w-4 after:rounded-full after:bg-white after:ring-2 after:ring-inset after:ring-slate-500 after:transition-all `}
-                                  type="checkbox"
-                                  name="presentOrAbsent"
-                                  value={isChecked}
-                                  onChange={() => handleIsChecked(index)}
-                                />
-                                <label
-                                  className="cursor-pointer pl-2 text-slate-500 peer-disabled:cursor-not-allowed peer-disabled:text-slate-400"
-                                  htmlFor="id-c01"
-                                >
-                                  {presentOrAbsent[index] ? "P" : "A"}
-                                </label>
+                                    type="checkbox"
+                                    name="presentOrAbsent"
+                                    value={isChecked}
+                                    onChange={() => handleIsChecked(index)}
+                                  />
+                                  <label
+                                    className="cursor-pointer pl-2 text-slate-500 peer-disabled:cursor-not-allowed peer-disabled:text-slate-400"
+                                    htmlFor="id-c01"
+                                  >
+                                    {presentOrAbsent[index] ? "P" : "A"}
+                                  </label>
+                                </div>
+                              </td>
+                            </tr>
+                          ))
+                        ) : (
+                          <tr className="border-b font-thin text-sm border-dashed last:border-b-0 flex items-center justify-center">
+                            <td className="p-3 pr-0 text-start "></td>
+                            <td className="p-3 pr-0 text-start ">
+                              <div className="text-2xl text-red-500">
+                                ENROLL NO. NOT FOUND
                               </div>
                             </td>
                           </tr>
-                        ))}
+                        )}
                       </tbody>
                     </table>
                   </div>
@@ -172,6 +186,7 @@ const SearchList = ({ attendStudent, searchData }) => {
                 {includes && (
                   <form
                     onSubmit={handleAttendenceSubmit}
+                    onKeyDown={handleAttendenceSubmit}
                     className="w-full mx-auto flex gap-10 items-center justify-center text-md sm:text-lg p-2"
                   >
                     <select

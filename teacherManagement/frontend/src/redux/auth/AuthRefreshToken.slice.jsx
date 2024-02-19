@@ -9,7 +9,8 @@ const initialState = {
 
 export const authRefreshToken = createAsyncThunk(
   "student/RefreshToken",
-  async (data, { rejectWithValue }) => {
+  async (data, { rejectWithValue, dispatch }) => {
+    dispatch();
     try {
       return await axios.post(
         "http://localhost:8000/api/v1/users/refresh-token",

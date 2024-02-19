@@ -16,7 +16,7 @@ const StudentInfo = () => {
     try {
       dispatch(getAllStudents());
     } catch (error) {
-      console.log(error.message);
+      throw new Error(error);
     }
   }, [dispatch]);
 
@@ -57,7 +57,7 @@ const StudentInfo = () => {
                       </>
                     ) : null}
                     {loading && !studentDetails && <Loader size={50} />}
-                    {studentDetails && (
+                    {studentDetails ? (
                       <>
                         {studentDetails.map((fromData) => (
                           <AttendenceList
@@ -66,6 +66,10 @@ const StudentInfo = () => {
                           />
                         ))}
                       </>
+                    ) : (
+                      <div className="text-2xl text-red-500">
+                        Student NO FOUND
+                      </div>
                     )}
                   </tbody>
                 </table>

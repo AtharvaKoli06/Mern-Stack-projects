@@ -6,10 +6,14 @@ import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const userLogin = useSelector((state) => state.Login);
-  const usersLogin = userLogin?.data?.data || "";
+  const usersLogin = userLogin?.data?.data;
+  const message = userLogin?.data?.data?.message;
+  const success = userLogin?.data?.data?.success;
+  const accessToken = userLogin?.data?.data?.accessToken;
+  console.log(userLogin);
 
-  const { data } = usersLogin || "";
-  const { user } = data || "";
+  const userData = usersLogin?.data;
+  const user = userData?.user;
 
   return (
     <div className="w-full bg-slate-300">
@@ -17,7 +21,9 @@ const Navbar = () => {
         <div className="flex items-center">
           <FcManager size={50} />
           <div>
-            <h1 className="text-lg md:text-4xl text-green-900 ">Teacher</h1>
+            <h1 className="text-lg md:text-4xl text-green-900 ">
+              {user?.username ? `${user?.username.toUpperCase()}` : "TEACHER"}
+            </h1>
           </div>
         </div>
         <div className="p-2 sm:w-2/4">
@@ -31,9 +37,9 @@ const Navbar = () => {
             <Link to="/guide" className="cursor-pointer hover:underline">
               Guide
             </Link>
-            {user.username && (
+            {user?.username && (
               <Link
-                to={`${user.username}/features`}
+                to={`${user?.username}/features`}
                 className="cursor-pointer hover:underline"
               >
                 Features
@@ -52,7 +58,9 @@ const Navbar = () => {
                   <Link
                     to="/logout"
                     state={{
-                      usersLogin: data,
+                      usersLogin: userData,
+                      userMessage: message,
+                      userSuccess: success,
                     }}
                   >
                     <li className="inline-block p-2 text-xs hover:bg-purple-200 w-full rounded-md">

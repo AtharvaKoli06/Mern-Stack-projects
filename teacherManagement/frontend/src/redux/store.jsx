@@ -9,6 +9,8 @@ import LoginSlice from "./auth/AuthLogin.slice";
 import RegisterSlice from "./auth/AuthRegister.slice";
 import refreshToken from "../redux/auth/AuthRefreshToken.slice";
 import LogoutSlice from "./auth/AuthLogout.slice";
+import authMiddleware from "./auth/auth";
+import PresistedStateSlice from "./auth/PresistedState";
 
 const persistconfig = {
   key: "root",
@@ -20,6 +22,7 @@ const rootReducer = combineReducers({
   attendence: createAttendenceListSlice,
   student: studentSlice,
   attendenceList: getAttendenceSlice,
+  persistedState: PresistedStateSlice,
   Login: LoginSlice,
   Register: RegisterSlice,
   RefreshToken: refreshToken,
@@ -33,6 +36,7 @@ const store = configureStore({
     getDefaultMiddleware({
       serializableCheck: false,
     }),
+  authMiddleware,
 });
 
 const persistor = persistStore(store);

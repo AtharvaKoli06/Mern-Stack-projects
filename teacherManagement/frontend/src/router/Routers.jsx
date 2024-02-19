@@ -27,6 +27,9 @@ import Login from "../pages/Login";
 import RequireAuth from "../redux/auth/RequireAuth";
 import Features from "../components/Features";
 import Logout from "../pages/Logout";
+import StudentInfo from "../components/AttendenceMark/StudentInfo";
+import SearchList from "../components/AttendenceMark/SearchList";
+import StudentReport from "../components/AttendenceReport/StudentReport";
 
 const Routers = () => (
   <Routes>
@@ -37,9 +40,15 @@ const Routers = () => (
       <Route path="logout" element={<Logout />} />
       <Route path="about" element={<About />} />
       <Route path="guide" element={<Guide />} />
-      <Route path="mark-attendence" element={<AttendenceMark />} />
-      <Route path="live-class-attendence-report" element={<RequireAuth />}>
-        <Route index element={<LiveClassReport />} />
+      <Route path="mark-attendence" element={<AttendenceMark />}>
+        <Route index element={<StudentInfo />} />
+        <Route path="details" element={<SearchList />} />
+        <Route path="studentEnrollNo/:enrollNo" element={<SearchList />} />
+      </Route>
+      <Route path="live-class-attendence-report" element={<LiveClassReport />}>
+        <Route index element={<StudentReport />} />
+        <Route path="details/:enrollNo" element={<Lists />} />
+        <Route path="details" element={<StudentReport />} />
         <Route path="lists" element={<Lists />} />
       </Route>
       <Route path="delete-attendence" element={<DeleteAttendence />} />

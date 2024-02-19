@@ -1,5 +1,5 @@
 import React, { useCallback, useRef, useState } from "react";
-import { useLocation, useOutletContext } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import P_A from "./P_A";
 
 import { CiSearch } from "react-icons/ci";
