@@ -1,12 +1,21 @@
-import React from "react";
+import React, { useContext } from "react";
 
-import { useSelector } from "react-redux";
 import StudentSearch from "../StudentSearch";
+import { FeatureContext } from "../../context/FeaturesSystem";
+import Error from "../Error";
+import Loader from "../Loader";
 
 const Search = () => {
-  const allReport = useSelector((state) => state.attendenceList);
-  const { data } = allReport;
-  const students = data?.data?.data;
+  const { attendList, attendListError, attendListLoading } =
+    useContext(FeatureContext);
+
+  if (attendListError) {
+    return <Error error={attendListError} />;
+  }
+  if (attendListLoading) {
+    return <Loader size={50} />;
+  }
+  const students = attendList?.data;
 
   return (
     <>

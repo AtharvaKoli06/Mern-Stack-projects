@@ -17,7 +17,7 @@ const generateAccessAndRefreshTokens = async (userId) => {
   } catch (error) {
     throw new ApiError(
       500,
-      "Something went wrong while generating referesh and access token"
+      "Something went wrong while generating refresh and access token"
     );
   }
 };
@@ -25,12 +25,7 @@ const generateAccessAndRefreshTokens = async (userId) => {
 const registerUser = asyncHandler(async (req, res) => {
   const { username, password } = req.body;
 
-  if (
-    [username, password].some(
-      (field) =>
-        field?.trim() === "" || (username.length <= 2 && password.length <= 8)
-    )
-  ) {
+  if ([username, password].some((field) => field?.trim() === "")) {
     throw new ApiError(
       400,
       "All fields are required with minimum 3 characters"

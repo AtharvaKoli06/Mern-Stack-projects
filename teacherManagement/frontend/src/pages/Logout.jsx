@@ -1,46 +1,43 @@
-import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useContext, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FiAlertTriangle } from "react-icons/fi";
-import { authLogout } from "../redux/auth/AuthLogout.slice";
+import { AuthContext } from "../context/AuthSystem";
 
 const Logout = () => {
-  const location = useLocation();
+  const { loginList, loginError, loginLoading, loginUser } =
+    useContext(AuthContext);
+  const { logoutList, logoutError, logoutLoading, logoutUser } =
+    useContext(AuthContext);
+
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const userLogout = useSelector((state) => state.Logout);
-  const { error, data, loading } = userLogout;
-  console.log(data);
+  const user = location.state?.user;
+  const accessToken = location.state?.accessToken;
 
-  const userData = location.state?.usersLogin;
-  const message = location.state?.userMessage;
-  const success = location.state?.userSuccess;
-  console.log(userData);
-
-  const { user, accessToken } = userData ?? { user: null, accessToken: null };
-
-  const dispatch = useDispatch();
+  const message = logoutList?.message;
+  console.log(message);
 
   const [errors, setErrors] = useState("");
 
   const handleLogOut = async () => {
     try {
-      dispatch(authLogout(accessToken));
+      await logoutUser(accessToken);
+      navigate("/", { state: { message } });
     } catch (error) {
-      setErrors("An error occurred during logout.", error);
+      setErrors(
+        `An error occurred during logout1 ${logoutError.message} Error ${error}`
+      );
     }
-    const hasErrors = Object.values(error).some((errors) => errors !== "");
+    const hasErrors = Object.values(logoutError).some(
+      (errors) => errors !== ""
+    );
     if (hasErrors) {
-      setErrors("An error occurred during logout.", error);
+      setErrors(`An error occurred during logout2., ${logoutError}`);
       return;
     }
-    if (user.username && !error) {
-      navigate("/");
-    }
-    if (success) {
-      alert(message);
-    }
   };
+
   return (
     <div className="h-screen bg-black flex items-center justify-center">
       <div className="p-4 sm:p-10 bg-gray-50 rounded-md w-[300px] md:w-[500px] text-center overflow-y-auto">

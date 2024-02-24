@@ -11,7 +11,6 @@ const Lists = () => {
   let absentData = location.state?.absentData;
   const [filterPresentData, setFilterPresentData] = useState(presentData);
   const [filterAbsentData, setFilterAbsentData] = useState(absentData);
-  console.log(filterAbsentData);
   let enrollNumber;
 
   const handleEnroll = useCallback(

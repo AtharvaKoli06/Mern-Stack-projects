@@ -6,7 +6,6 @@ import About from "../pages/About";
 import Guide from "../pages/Guide";
 import AttendenceMark from "../pages/AttendenceMark";
 import LiveClassReport from "../pages/LiveClassReport";
-import DeleteAttendence from "../pages/DeleteAttendence";
 import ShowAttendence from "../pages/ShowAttendence";
 import UpdateRollNo from "../pages/UpdateRollNo.";
 import UpdateSeatNo from "../pages/UpdateSeatNo";
@@ -24,7 +23,7 @@ import Lists from "../components/AttendenceReport/Lists";
 import DailyReport from "../pages/DailyReport";
 import Register from "../pages/Register";
 import Login from "../pages/Login";
-import RequireAuth from "../redux/auth/RequireAuth";
+import RequireAuth from "../auth/RequireAuth";
 import Features from "../components/Features";
 import Logout from "../pages/Logout";
 import StudentInfo from "../components/AttendenceMark/StudentInfo";
@@ -36,9 +35,9 @@ const Routers = () => (
     <Route path="/" element={<Layout />}>
       <Route path="register" element={<Register />} />
       <Route index element={<Home />} />
+      <Route path="about" element={<About />} />
       <Route path="login" element={<Login />} />
       <Route path="logout" element={<Logout />} />
-      <Route path="about" element={<About />} />
       <Route path="guide" element={<Guide />} />
       <Route path="mark-attendence" element={<AttendenceMark />}>
         <Route index element={<StudentInfo />} />
@@ -51,7 +50,6 @@ const Routers = () => (
         <Route path="details" element={<StudentReport />} />
         <Route path="lists" element={<Lists />} />
       </Route>
-      <Route path="delete-attendence" element={<DeleteAttendence />} />
       <Route path="show-attendence" element={<ShowAttendence />} />
       <Route path="update-roll" element={<UpdateRollNo />} />
       <Route path="update-seatno" element={<UpdateSeatNo />} />
@@ -67,7 +65,7 @@ const Routers = () => (
       <Route path="activity" element={<Reports />} />
       <Route path="timetable" element={<TimeTable />} />
       <Route element={<RequireAuth />}>
-        <Route path="/:name/features" element={<Features />} />
+        <Route path="/:username/features" element={<Features />} />
       </Route>
     </Route>
   </Routes>

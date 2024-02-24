@@ -1,60 +1,59 @@
-import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, Link } from "react-router-dom";
+import React, { useContext, useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { RiLoginBoxFill } from "react-icons/ri";
-
-import { authLogin } from "../redux/auth/AuthLogin.slice";
 import Loader from "../components/Loader";
+import { FaArrowRightFromBracket } from "react-icons/fa6";
+import { AuthContext } from "../context/AuthSystem";
+import axios from "axios";
 
 const Login = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [year, setYear] = useState("");
+  const { loginList, loginError, loginLoading, loginUser } =
+    useContext(AuthContext);
+
+  const [formData, setFormData] = useState({
+    year: "",
+    username: "",
+    password: "",
+  });
   const [errors, setErrors] = useState("");
+  const user = loginList?.data?.user?.username;
+  const message = loginList?.message;
+  const success = loginList?.success;
+  const accessToken = loginList?.data?.accessToken;
+  const refreshToken = loginList?.data?.refreshToken;
 
-  const [onSuccess, setOnSuccess] = useState("");
-
-  const dataLogin = useSelector((state) => state.Login);
-  const { loading, error, data } = dataLogin;
-
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const user = data?.data?.data?.user?.username;
-  const userDetails = data?.data;
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      dispatch(authLogin({ username, password, year }));
-      setUsername("");
-      setPassword("");
-      setYear("");
+      await loginUser(formData);
+      if (accessToken) {
+        axios.defaults.headers.common[
+          "Authorization"
+        ] = `Bearer ${accessToken}`;
+      }
+      setFormData({
+        year: "",
+        username: "",
+        password: "",
+      });
     } catch (error) {
-      setErrors("An error occurred during User Login", error);
+      setErrors(`An error occurred during User Login Error: ${error.message}`);
     }
-    const hasErrors = Object.values(error).some(
+    const hasErrors = Object.values(loginError).some(
       (errorsMsg) => errorsMsg !== ""
     );
     if (hasErrors) {
-      setErrors("An error occurred during User Login", error);
+      setErrors(`An error occurred during User Login", ${loginError.message}`);
       return;
     }
-    if (userDetails?.success) {
-      setOnSuccess(userDetails.message);
-      navigate(`/${user}/features`);
-    }
-
-    alert(error ? error : userDetails?.message);
   };
 
-  const handleUserInput = (e) => {
-    setUsername(e.target.value);
-  };
-  const handlePasswordInput = (e) => {
-    setPassword(e.target.value);
-  };
-  const handleYearSelect = (e) => {
-    setYear(e.target.value);
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
   };
 
   const years = Array.from(
@@ -62,15 +61,18 @@ const Login = () => {
     (_, i) => new Date().getFullYear() - i
   );
 
-  const content = loading ? (
+  const content = loginLoading ? (
     <Loader size={50} />
   ) : (
     <form className="my-6" onSubmit={handleSubmit}>
-      {error && <p className="text-red-500">{error}</p>}
+      {errors && (
+        <p className={`text-red-500 ${user ? "hidden" : "flex"} `}>{errors}</p>
+      )}
       <select
-        value={year}
+        value={formData.year}
+        name="year"
         className="p-2 my-2 rounded w-[100%] focus:outline-blue-600"
-        onChange={handleYearSelect}
+        onChange={handleChange}
       >
         <option value="">Select Year</option>
         {years.map((year) => (
@@ -84,18 +86,18 @@ const Login = () => {
         className="p-2 my-2 rounded w-[100%] focus:outline-blue-600"
         placeholder="Username..."
         type="text"
-        value={username}
-        onChange={handleUserInput}
+        name="username"
+        value={formData.username}
+        onChange={handleChange}
         autoComplete="off"
-        required
       />
       <input
         className="p-2 my-2 rounded w-[100%] focus:outline-blue-600"
         placeholder="Password"
         type="password"
-        value={password}
-        onChange={handlePasswordInput}
-        required
+        value={formData.password}
+        name="password"
+        onChange={handleChange}
       />
       <button
         type="submit"
@@ -114,20 +116,34 @@ const Login = () => {
           <h1 className="text-center font-bold text-3xl">Login</h1>
         </div>
         {content}
-        <div className="flex justify-around items-center w-full border">
-          {errors && (
-            <Link
-              to="/register"
-              className="text-md text-green-500 hover:underline"
-            >
-              Register
-            </Link>
-          )}
-          {onSuccess && (
-            <p className="text-md text-green-500 hover:underline">
-              {userDetails.message}
-            </p>
-          )}
+        <div className="flex justify-between  items-center w-full">
+          <div>
+            {errors ? (
+              <Link
+                to="/register"
+                className="text-md text-green-500 hover:underline"
+              >
+                Register
+              </Link>
+            ) : null}
+          </div>
+          <div className="flex items-center w-full justify-between">
+            {success && loginList?.data?.user ? (
+              <>
+                <p className="text-md text-green-500 hover:underline ml-12">
+                  {message}
+                </p>
+                <Link
+                  to={`/${user}/features`}
+                  className="text-md text-green-500 hover:underline"
+                >
+                  <span>
+                    Features <FaArrowRightFromBracket size={30} />
+                  </span>
+                </Link>
+              </>
+            ) : null}
+          </div>
         </div>
       </div>
     </div>

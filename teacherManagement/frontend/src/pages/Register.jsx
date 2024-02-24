@@ -1,26 +1,47 @@
-import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import React, { useContext, useState } from "react";
+import { Link } from "react-router-dom";
 import { GiArchiveRegister } from "react-icons/gi";
-
-import { authRegister } from "../redux/auth/AuthRegister.slice";
 import Loader from "../components/Loader";
-
+import { AuthContext } from "../context/AuthSystem";
+import { FaArrowRightFromBracket } from "react-icons/fa6";
 const Register = () => {
+  const { registerList, registerUser, registerError, registerLoading } =
+    useContext(AuthContext);
   const [formData, setFormData] = useState({
     username: "",
     password: "",
   });
+
+  const message = registerList?.message;
+  const success = registerList?.success;
+  const user = registerList?.data?.user;
+
   const [errorsMsg, setErrorsMsg] = useState({});
   const [errors, setErrors] = useState("");
 
-  const { loading, error, data } = useSelector((state) => state.Register);
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-
-  let status = data?.data;
-  let message = status?.message;
-  let success = status?.success;
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      registerUser(formData);
+      setFormData({
+        username: "",
+        password: "",
+      });
+    } catch (error) {
+      setErrors(
+        `An error occurred ${registerError.message} -- ${error.message}`
+      );
+    }
+    const hasErrors = Object.values(registerError).some(
+      (errorsMsg) => errorsMsg !== ""
+    );
+    if (hasErrors) {
+      setErrors(
+        `An error occurred during User register", ${registerError.message}`
+      );
+      return;
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -55,33 +76,13 @@ const Register = () => {
     setErrorsMsg((prevErrors) => ({ ...prevErrors, [name]: error }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      dispatch(authRegister(formData));
-    } catch (error) {
-      setErrors("An error occurred during User register", message);
-    }
-    if (error) {
-      setErrors("An error occurred during User register2", message);
-      return;
-    }
-    setFormData({
-      username: "",
-      password: "",
-    });
-    if (success && status.data && !error) {
-      navigate("/login");
-      success = false;
-    }
-    alert(error ? error : message);
-  };
-
-  const content = loading ? (
+  const content = registerLoading ? (
     <Loader size={50} />
   ) : (
     <form className="my-6" onSubmit={handleSubmit}>
-      {errors && <p className="text-red-500">{errors}</p>}
+      {errors && (
+        <p className={`text-red-500 ${user ? "hidden" : "flex"} `}>{errors}</p>
+      )}
       <input
         className="p-2 my-2 rounded w-[100%] focus:outline-blue-600"
         placeholder="username..."
@@ -124,6 +125,23 @@ const Register = () => {
           <h1 className="text-center font-bold text-3xl">Register</h1>
         </div>
         {content}
+        <div className="flex justify-around items-center w-full">
+          {success ? (
+            <>
+              <p className="text-md text-green-500 hover:underline">
+                {message}
+              </p>
+              <Link
+                to="/login"
+                className="text-md text-green-500 hover:underline"
+              >
+                <span>
+                  LOGIN <FaArrowRightFromBracket size={30} />
+                </span>
+              </Link>
+            </>
+          ) : null}
+        </div>
       </div>
     </div>
   );

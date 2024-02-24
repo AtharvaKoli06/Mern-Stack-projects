@@ -1,14 +1,13 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 
 import { MdOutlineIntegrationInstructions } from "react-icons/md";
-import { useDispatch, useSelector } from "react-redux";
-import { createStudent } from "../../redux/slices/CreateStudent.slice";
 import StudentSearch from "../StudentSearch";
 import StudentEnrollNoSearch from "../StudentEnrollNoSearch";
 import { useLocation } from "react-router-dom";
+import { FeatureContext } from "../../context/FeaturesSystem";
+import Loader from "../Loader";
 
 const Search = () => {
-  const dispatch = useDispatch();
   const [formData, setFormData] = useState({
     rollNo: "",
     enrollNo: "",
@@ -25,19 +24,33 @@ const Search = () => {
   const location = useLocation();
   const searchData = location.state?.studentData;
 
-  const allStudents = useSelector((state) => state.allStudent);
-  const { loading, error, data } = allStudents;
-  const students = data?.data?.data;
+  const {
+    studentList,
+    studentLoading,
+    studentError,
+    studentListing,
+    createStudent,
+  } = useContext(FeatureContext);
 
-  const handleSubmit = (e) => {
+  let message = studentList?.message;
+  let success = studentList?.success;
+
+  const [errors, setErrors] = useState("");
+  const [apiErrors, setApiErrors] = useState("");
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      dispatch(createStudent(formData));
+      await createStudent(formData);
     } catch (error) {
-      console.log(error.message);
+      setApiErrors(error);
     }
-    if (error) {
-      return <h1 className="text-xs text-red-600">{error.message}</h1>;
+    if (errors) {
+      setErrors(
+        <h1 className="text-xs text-red-600">
+          Something went Wrong {studentError}
+        </h1>
+      );
     }
     setFormData({
       rollNo: "",
@@ -60,10 +73,15 @@ const Search = () => {
     }));
   };
 
+  if (studentLoading) {
+    return <Loader size={70} />;
+  }
+  const student = studentListing.data;
+
   return (
     <>
-      <div className="w-10/12 mx-auto mt-14 flex justify-between border-b-4 gap-2">
-        <StudentEnrollNoSearch students={students} />
+      <div className="w-10/12 mx-auto mt-14 flex justify-between border-b-4 gap-2 relative ">
+        <StudentEnrollNoSearch students={student} />
         <div className="border bg-green-400 p-2 rounded-md">
           {searchData?.length ? searchData.length : 0}
         </div>
@@ -99,6 +117,7 @@ const Search = () => {
               className="w-full border grid sm:grid-cols-2 lg:grid-cols-3 gap-2 "
               onSubmit={handleSubmit}
             >
+              {errors && <p className="text-xl text-red-500">{errors}</p>}
               <input
                 className="p-2 my-2 rounded w-[100%] focus:outline-blue-600"
                 placeholder="Roll no."
@@ -184,7 +203,14 @@ const Search = () => {
           </div>
         </div>
       </div>
-      <StudentSearch students={students} />
+      <StudentSearch students={student} />
+      <div className="w-72 p-2 right-0 top-52 absolute">
+        {apiErrors && (
+          <p className={`text-xl text-red-500 ${success ? "hidden" : "flex"}`}>
+            Error:- {apiErrors}
+          </p>
+        )}
+      </div>
     </>
   );
 };

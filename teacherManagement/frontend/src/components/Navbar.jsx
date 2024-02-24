@@ -1,19 +1,15 @@
-import React, { useState } from "react";
+import React, { useContext } from "react";
 import { FcManager } from "react-icons/fc";
 import { MdAccountCircle } from "react-icons/md";
-import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../context/AuthSystem";
 
 const Navbar = () => {
-  const userLogin = useSelector((state) => state.Login);
-  const usersLogin = userLogin?.data?.data;
-  const message = userLogin?.data?.data?.message;
-  const success = userLogin?.data?.data?.success;
-  const accessToken = userLogin?.data?.data?.accessToken;
-  console.log(userLogin);
+  const { loginList, loginError, loginLoading, LoginUser } =
+    useContext(AuthContext);
 
-  const userData = usersLogin?.data;
-  const user = userData?.user;
+  const user = loginList?.data?.user;
+  const accessToken = loginList?.data?.accessToken;
 
   return (
     <div className="w-full bg-slate-300">
@@ -55,14 +51,7 @@ const Navbar = () => {
             <div className="absolute top-5 shadow-lg rounded-md right-1 p-2 z-50 hidden group-hover:block text-black bg-white w-[150px] border">
               <ul className="grid lg:grid-cols-1">
                 {user ? (
-                  <Link
-                    to="/logout"
-                    state={{
-                      usersLogin: userData,
-                      userMessage: message,
-                      userSuccess: success,
-                    }}
-                  >
+                  <Link to="/logout" state={{ user, accessToken }}>
                     <li className="inline-block p-2 text-xs hover:bg-purple-200 w-full rounded-md">
                       LOGOUT
                     </li>

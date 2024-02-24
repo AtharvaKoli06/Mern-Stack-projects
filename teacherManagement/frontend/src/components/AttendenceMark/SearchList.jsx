@@ -1,12 +1,21 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import { createAttendence } from "../../redux/slices/CreateAttendenceList.slice";
+import React, { useContext, useState } from "react";
+
 import { useLocation } from "react-router-dom";
+import { FeatureContext } from "../../context/FeaturesSystem";
 
 const SearchList = () => {
-  const dispatch = useDispatch();
+  const {
+    studentListing,
+    createAttendList,
+    markAttendError,
+    markAttendLoading,
+  } = useContext(FeatureContext);
+
   const [includes, setIncludes] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
+  const [errors, setErrors] = useState("");
+
+  let attendStudent = studentListing?.data;
 
   const location = useLocation();
   const searchData = location.state?.studentData;
@@ -80,9 +89,9 @@ const SearchList = () => {
   const handleAttendenceSubmit = (e) => {
     e.preventDefault();
     try {
-      dispatch(createAttendence(Attend));
+      createAttendList(Attend);
     } catch (error) {
-      console.log(error.message);
+      setErrors(error);
     }
     setAttend({
       lecture: "",
@@ -104,13 +113,15 @@ const SearchList = () => {
                     <table className="w-full my-0 align-middle text-dark border-neutral-200 font-thin">
                       <thead className="align-bottom">
                         <tr className="font-semibold text-[0.95rem] text-secondary-dark">
-                          <th className="pb-3 text-start min-w-[30px]">
+                          <th className="pb-3 text-start min-w-[50px] p-2 text-xs sm:text-lg">
                             Roll No.
                           </th>
-                          <th className="pb-3 text-start min-w-[30px]">
+                          <th className="pb-3 text-start min-w-[50px] p-2 text-xs sm:text-lg">
                             Enroll No.
                           </th>
-                          <th className="pb-3 text-start">Student's Name</th>
+                          <th className="pb-3 text-start min-w-[50px]  p-2 text-xs sm:text-lg">
+                            Student's Name
+                          </th>
                           <th className="pb-3 text-start min-w-[30px]">Year</th>
                           <th className="pb-3 text-start min-w-[30px]">
                             courseName
@@ -219,6 +230,11 @@ const SearchList = () => {
                       SUBMIT ATTENDENCE
                       <div className="absolute inset-0 h-full w-full scale-0 rounded-2xl transition-all duration-300 group-hover:scale-100 group-hover:bg-white/30"></div>
                     </button>
+                    {errors && (
+                      <p className="text-xl text-red-500">
+                        {errors} -- {markAttendError}
+                      </p>
+                    )}
                   </form>
                 )}
               </div>

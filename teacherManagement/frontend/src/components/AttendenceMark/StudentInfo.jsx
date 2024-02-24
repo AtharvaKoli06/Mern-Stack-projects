@@ -1,24 +1,28 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import AttendenceList from "./AttendenceList";
-import { useSelector, useDispatch } from "react-redux";
-import { getAllStudents } from "../../redux/slices/getAllStudents.slice";
 
 import Loader from "../Loader";
 import Error from "../Error";
+import { FeatureContext } from "../../context/FeaturesSystem";
 
 const StudentInfo = () => {
-  const dispatch = useDispatch();
-  const studentInfo = useSelector((state) => state.allStudent);
-  const { loading, error, data } = studentInfo;
-  const studentDetails = data?.data?.data;
+  const {
+    studentListing,
+    studentListingError,
+    studentListingLoading,
+    Students,
+  } = useContext(FeatureContext);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     try {
-      dispatch(getAllStudents());
+      Students();
     } catch (error) {
-      throw new Error(error);
+      setError(error);
     }
-  }, [dispatch]);
+  }, []);
+
+  const studentDetails = studentListing?.data;
 
   return (
     <div className="flex flex-wrap -mx-3 mb-5">
@@ -51,12 +55,14 @@ const StudentInfo = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {!loading && error ? (
+                    {!studentListingLoading && studentListingError ? (
                       <>
                         <Error error={error} />
                       </>
                     ) : null}
-                    {loading && !studentDetails && <Loader size={50} />}
+                    {studentListingLoading && !studentDetails && (
+                      <Loader size={50} />
+                    )}
                     {studentDetails ? (
                       <>
                         {studentDetails.map((fromData) => (
@@ -68,7 +74,7 @@ const StudentInfo = () => {
                       </>
                     ) : (
                       <div className="text-2xl text-red-500">
-                        Student NO FOUND
+                        Student NOT FOUND {error}
                       </div>
                     )}
                   </tbody>

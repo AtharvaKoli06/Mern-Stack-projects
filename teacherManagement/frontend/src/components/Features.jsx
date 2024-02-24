@@ -37,12 +37,6 @@ const features = [
     navigate: "/live-class-attendence-report",
   },
   {
-    id: 3,
-    name: "DELETE ATTENDENCE",
-    img: <TiUserDelete size={45} />,
-    navigate: "/delete-attendence",
-  },
-  {
     id: 4,
     name: "STUDENT REPORT",
     img: <HiOutlineDocumentReport size={45} />,

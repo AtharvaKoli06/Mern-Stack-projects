@@ -1,27 +1,24 @@
 import Loader from "../Loader";
 import Error from "../Error";
-
 import ReportList from "../AttendenceReport/ReportList";
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { getAllAttendenceList } from "../../redux/slices/getAllAttendence.slice";
+import { useContext, useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
+import { FeatureContext } from "../../context/FeaturesSystem";
 
 const StudentReport = () => {
-  const location = useLocation();
-  const dispatch = useDispatch();
+  const { attendList, attendListError, attendListLoading, AttendList } =
+    useContext(FeatureContext);
+  const [error, setError] = useState(attendListError);
 
-  const { loading, data, error } = useSelector((state) => state.attendenceList);
-  let attendenceList = data?.data?.data;
+  const attendenceList = attendList?.data;
 
   useEffect(() => {
-    dispatch(getAllAttendenceList());
-  }, [dispatch]);
-
-  const searchData = location.state?.studentData;
-
-  if (searchData?.length) {
-    attendenceList = searchData;
-  }
+    try {
+      AttendList();
+    } catch (error) {
+      setError(error);
+    }
+  }, []);
 
   return (
     <>
@@ -55,19 +52,14 @@ const StudentReport = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {!loading && error ? (
-                        <>
-                          <Error error={error} />
-                        </>
-                      ) : null}
-                      {loading && !attendenceList && <Loader size={50} />}
-                      {attendenceList && (
-                        <>
-                          {attendenceList.map((data) => (
-                            <ReportList key={data._id} attendencedata={data} />
-                          ))}
-                        </>
+                      {attendListLoading && <Loader size={50} />}
+                      {!attendListLoading && attendListError && (
+                        <Error error={error} />
                       )}
+                      {attendenceList &&
+                        attendenceList.map((data) => (
+                          <ReportList key={data._id} attendencedata={data} />
+                        ))}
                     </tbody>
                   </table>
                 </div>

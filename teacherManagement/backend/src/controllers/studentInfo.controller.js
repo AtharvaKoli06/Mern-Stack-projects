@@ -104,7 +104,7 @@ export const allStudentInfo = asyncHandler(async (req, res) => {
   }
   return res
     .status(201)
-    .json(new ApiResponse(200, students, "Created Student status success..!"));
+    .json(new ApiResponse(200, students, "Students Fetched success..!"));
 });
 export const allAttendenceRecord = asyncHandler(async (req, res) => {
   const attendence = await StudentAttendenceData.find();
@@ -113,7 +113,5 @@ export const allAttendenceRecord = asyncHandler(async (req, res) => {
   }
   return res
     .status(201)
-    .json(
-      new ApiResponse(200, attendence, "Created Student status success..!")
-    );
+    .json(new ApiResponse(200, attendence, "Students Fetched success..!"));
 });

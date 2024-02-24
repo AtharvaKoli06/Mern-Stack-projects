@@ -2,9 +2,6 @@ import React from "react";
 import { AiOutlineCheck } from "react-icons/ai";
 import Search from "../components/AttendenceReport/Search";
 import { Outlet } from "react-router-dom";
-
-import StudentReport from "../components/AttendenceReport/StudentReport";
-
 const LiveClassReport = () => {
   return (
     <>

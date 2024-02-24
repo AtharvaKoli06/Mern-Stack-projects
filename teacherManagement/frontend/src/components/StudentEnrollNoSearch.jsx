@@ -8,6 +8,7 @@ const StudentEnrollNoSearch = ({ students }) => {
   const navigate = useNavigate();
   const enrollInput = useRef();
   let enrollNumber;
+  const [hasError, setHasError] = useState("");
 
   const handleEnroll = useCallback(
     (e) => {
@@ -18,10 +19,13 @@ const StudentEnrollNoSearch = ({ students }) => {
           const filter = students.filter(
             (field) => field.enrollNo === enrollNumber
           );
-          enrollInput.current.value = "";
           navigate(`studentEnrollNo/${enrollNumber}`, {
             state: { studentData: filter },
           });
+          enrollInput.current.value = "";
+          setHasError("");
+        } else {
+          setHasError("Enroll number should be greater then or equal to 100");
         }
       }
     },
@@ -47,6 +51,14 @@ const StudentEnrollNoSearch = ({ students }) => {
             onClick={handleEnroll}
             className="bg-green-500 text-black h-10 p-1"
           />
+
+          <p
+            className={`${
+              hasError ? "block" : "hidden"
+            } bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative`}
+          >
+            {hasError}
+          </p>
         </div>
       </div>
     </>

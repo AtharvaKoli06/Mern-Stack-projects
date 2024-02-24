@@ -2,8 +2,6 @@ import React, { useState } from "react";
 
 import Search from "../components/AttendenceMark/Search";
 
-import StudentInfo from "../components/AttendenceMark/StudentInfo";
-
 import { Outlet } from "react-router-dom";
 
 const AttendenceMark = () => {
