@@ -7,7 +7,7 @@ import { AuthContext } from "../context/AuthSystem";
 import axios from "axios";
 
 const Login = () => {
-  const { loginList, loginError, loginLoading, loginUser } =
+  const { loginList, loginError, loginLoading, loginUser, refreshTokenError } =
     useContext(AuthContext);
 
   const [formData, setFormData] = useState({
@@ -20,30 +20,27 @@ const Login = () => {
   const message = loginList?.message;
   const success = loginList?.success;
   const accessToken = loginList?.data?.accessToken;
-  const refreshToken = loginList?.data?.refreshToken;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       await loginUser(formData);
-      if (accessToken) {
-        axios.defaults.headers.common[
-          "Authorization"
-        ] = `Bearer ${accessToken}`;
-      }
+      axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
       setFormData({
         year: "",
         username: "",
         password: "",
       });
     } catch (error) {
-      setErrors(`An error occurred during User Login Error: ${error.message}`);
+      setErrors(
+        `An error occurred during User Login Error: ${loginError.message}`
+      );
     }
     const hasErrors = Object.values(loginError).some(
       (errorsMsg) => errorsMsg !== ""
     );
     if (hasErrors) {
-      setErrors(`An error occurred during User Login", ${loginError.message}`);
+      setErrors(`An error occurred during User Login, ${loginError.message}`);
       return;
     }
   };
@@ -65,9 +62,13 @@ const Login = () => {
     <Loader size={50} />
   ) : (
     <form className="my-6" onSubmit={handleSubmit}>
-      {errors && (
-        <p className={`text-red-500 ${user ? "hidden" : "flex"} `}>{errors}</p>
-      )}
+      {errors ||
+        (refreshTokenError && (
+          <p className={`text-red-500 ${user ? "hidden" : "flex"} `}>
+            {errors}
+            {refreshTokenError.message}
+          </p>
+        ))}
       <select
         value={formData.year}
         name="year"

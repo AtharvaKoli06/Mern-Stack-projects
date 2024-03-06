@@ -20,7 +20,6 @@ app.use(express.static("public"));
 app.use(cookieParser());
 
 // router
-
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/student", studentInfoRouter);
 

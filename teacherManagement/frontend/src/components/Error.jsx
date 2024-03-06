@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const Error = ({ error }) => {
   return (
@@ -27,6 +28,14 @@ const Error = ({ error }) => {
             <h1 className="mt-5 text-[36px] font-bold text-slate-800 lg:text-[40px]">
               {error}
             </h1>
+            {error === "Request failed with status code 401" && (
+              <Link
+                to="/login"
+                className="mt-5 text-[36px] font-bold text-green-500 lg:text-[40px]"
+              >
+                Login Token expired
+              </Link>
+            )}
           </div>
         </div>
       </div>

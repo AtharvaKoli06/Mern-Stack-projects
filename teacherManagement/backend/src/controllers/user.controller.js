@@ -64,7 +64,7 @@ const loginUser = asyncHandler(async (req, res) => {
   const behindDate = new Date().getFullYear - 1;
 
   if (!username && !year) {
-    throw new ApiError(400, "username and year is required");
+    throw new ApiError(400, "username and year, roles is required");
   }
   if (year === behindDate) {
     throw new ApiError(400, "you have defined last year");
@@ -83,7 +83,6 @@ const loginUser = asyncHandler(async (req, res) => {
   if (!isPasswordValid) {
     throw new ApiError(401, "Invalid user credentials");
   }
-
   const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(
     user._id
   );

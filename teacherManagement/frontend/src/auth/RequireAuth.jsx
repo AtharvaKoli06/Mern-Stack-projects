@@ -6,12 +6,14 @@ import useLocalStorage from "../customHook/UseLocalStorageHook";
 const RequireAuth = () => {
   const location = useLocation();
   const { getLocalStorage } = useLocalStorage("fetchedData");
+  const { loginList } = useContext(AuthContext);
 
-  const token = getLocalStorage();
+  const authToken = getLocalStorage();
+  const accessToken = loginList?.data?.accessToken;
 
   return (
     <>
-      {token?.data?.accessToken ? (
+      {authToken?.data?.accessToken || accessToken ? (
         <Outlet />
       ) : (
         <Navigate to="/login" state={{ from: location }} replace />

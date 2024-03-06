@@ -2,24 +2,24 @@ import React, { useContext } from "react";
 
 import StudentSearch from "../StudentSearch";
 import { FeatureContext } from "../../context/FeaturesSystem";
-import Error from "../Error";
-import Loader from "../Loader";
 
 const Search = () => {
-  const { attendList, attendListError, attendListLoading } =
-    useContext(FeatureContext);
-
-  if (attendListError) {
-    return <Error error={attendListError} />;
-  }
-  if (attendListLoading) {
-    return <Loader size={50} />;
-  }
+  const { attendList, attendListError } = useContext(FeatureContext);
   const students = attendList?.data;
 
   return (
     <>
-      <StudentSearch students={students} />
+      {!attendListError ? (
+        <StudentSearch students={students} />
+      ) : (
+        <p
+          className={`${
+            attendListError.message ? "block" : "hidden"
+          } bg-red-100 border w-1/4 border-red-400 text-red-700 px-4 py-3 rounded relative`}
+        >
+          {attendListError.message}
+        </p>
+      )}
     </>
   );
 };

@@ -2,6 +2,8 @@ import React, { useContext, useState } from "react";
 
 import { useLocation } from "react-router-dom";
 import { FeatureContext } from "../../context/FeaturesSystem";
+import Error from "../Error";
+import Loader from "../Loader";
 
 const SearchList = () => {
   const {
@@ -100,6 +102,17 @@ const SearchList = () => {
     setPresentOrAbsent(initialValue);
     setIsChecked((prev) => !prev);
   };
+  if (markAttendError) {
+    return (
+      <Error
+        error={markAttendError.message}
+        statusCode={markAttendError.statusCode}
+      />
+    );
+  }
+  if (markAttendLoading) {
+    return <Loader size={40} />;
+  }
 
   return (
     <>
@@ -136,7 +149,7 @@ const SearchList = () => {
                               className="border-b font-thin text-sm border-dashed last:border-b-0"
                             >
                               <td className="p-3 pl-0">
-                                <div className="flex items-center">
+                                <div className="flex items-center ">
                                   {data.rollNo}
                                 </div>
                               </td>
@@ -146,7 +159,7 @@ const SearchList = () => {
                                 </span>
                               </td>
                               <td className="p-3 pr-0 text-start">
-                                <span className="font-semibold text-light-inverse text-md/normal">
+                                <span className="font-semibold text-light-inverse text-md/normal ">
                                   {data.studentsName}
                                 </span>
                               </td>
@@ -185,7 +198,7 @@ const SearchList = () => {
                             <td className="p-3 pr-0 text-start "></td>
                             <td className="p-3 pr-0 text-start ">
                               <div className="text-2xl text-red-500">
-                                ENROLL NO. NOT FOUND
+                                NOT FOUND
                               </div>
                             </td>
                           </tr>
@@ -230,11 +243,21 @@ const SearchList = () => {
                       SUBMIT ATTENDENCE
                       <div className="absolute inset-0 h-full w-full scale-0 rounded-2xl transition-all duration-300 group-hover:scale-100 group-hover:bg-white/30"></div>
                     </button>
-                    {errors && (
-                      <p className="text-xl text-red-500">
-                        {errors} -- {markAttendError}
-                      </p>
-                    )}
+                    <p
+                      className={`${
+                        markAttendError.message ? "block" : "hidden"
+                      } bg-red-100 border border-red-400 text-red-700 p-2 rounded relative`}
+                    >
+                      {errors} --
+                      {markAttendError.message}
+                    </p>
+                    <p
+                      className={`${
+                        markAttendenceList.success ? "block" : "hidden"
+                      } bg-red-100 border border-red-400 text-red-700 p-2 rounded relative`}
+                    >
+                      {markAttendenceList.message}
+                    </p>
                   </form>
                 )}
               </div>

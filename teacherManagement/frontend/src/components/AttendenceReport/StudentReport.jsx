@@ -8,7 +8,6 @@ import { FeatureContext } from "../../context/FeaturesSystem";
 const StudentReport = () => {
   const { attendList, attendListError, attendListLoading, AttendList } =
     useContext(FeatureContext);
-  const [error, setError] = useState(attendListError);
 
   const attendenceList = attendList?.data;
 
@@ -16,7 +15,7 @@ const StudentReport = () => {
     try {
       AttendList();
     } catch (error) {
-      setError(error);
+      console.error(error);
     }
   }, []);
 
@@ -54,7 +53,10 @@ const StudentReport = () => {
                     <tbody>
                       {attendListLoading && <Loader size={50} />}
                       {!attendListLoading && attendListError && (
-                        <Error error={error} />
+                        <Error
+                          error={attendListError.message}
+                          statusCode={attendListError.statusCode}
+                        />
                       )}
                       {attendenceList &&
                         attendenceList.map((data) => (

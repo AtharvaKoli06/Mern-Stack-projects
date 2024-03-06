@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 const StudentSearch = ({ students }) => {
   const navigate = useNavigate();
   const [selected, setSelected] = useState({
-    medium: "",
     year: "",
     courseName: "",
   });
@@ -23,11 +22,12 @@ const StudentSearch = ({ students }) => {
     },
     [students]
   );
+
   const handleSelectChange = (e) => {
     const { name, value } = e.target;
     setSelected({
       ...selected,
-      [name]: value.toUpperCase(),
+      [name]: value.toLowerCase(),
     });
   };
   const handleOptionsSubmit = (e) => {
@@ -42,10 +42,10 @@ const StudentSearch = ({ students }) => {
     <>
       <div className="w-full">
         <form
-          className="w-10/12 mx-auto grid sm:grid-cols-2 lg:grid-cols-4 place-content-center gap-5 p-2 text-lg"
+          className="sm:w-full w-5/6 grid sm:grid-cols-2 lg:grid-cols-3 place-content-center gap-15 p-2 text-lg"
           onSubmit={handleOptionsSubmit}
         >
-          <div className="relative my-6 md:w-60">
+          <div className="relative my-6 w-72 mx-auto sm:w-60">
             <select
               name="year"
               id="year"
@@ -80,14 +80,14 @@ const StudentSearch = ({ students }) => {
               htmlFor="year"
               className="pointer-events-none absolute top-2.5 left-2 z-[1] px-2 text-sm text-slate-400 transition-all before:absolute before:top-0 before:left-0 before:z-[-1] before:block before:h-full before:w-full before:bg-white before:transition-all peer-required:after:text-pink-500 peer-required:after:content-['\00a0*'] peer-valid:-top-2 peer-valid:text-xs peer-focus:-top-2 peer-focus:text-xs peer-focus:text-emerald-500 peer-disabled:cursor-not-allowed peer-disabled:text-slate-400 peer-disabled:before:bg-transparent"
             >
-              Select an option
+              Year
             </label>
             <IoIosArrowDown
               className="pointer-events-none absolute top-2.5 right-2 h-5 w-5 fill-slate-400 transition-all peer-focus:fill-emerald-500 peer-disabled:cursor-not-allowed"
               size={30}
             />
           </div>
-          <div className="relative my-6 md:w-60">
+          <div className="relative my-6 w-72 mx-auto sm:w-60">
             <select
               id="courseName"
               name="courseName"
@@ -194,17 +194,17 @@ const StudentSearch = ({ students }) => {
               htmlFor="courseName"
               className="pointer-events-none absolute top-2.5 left-2 z-[1] px-2 text-sm text-slate-400 transition-all before:absolute before:top-0 before:left-0 before:z-[-1] before:block before:h-full before:w-full before:bg-white before:transition-all peer-required:after:text-pink-500 peer-required:after:content-['\00a0*'] peer-valid:-top-2 peer-valid:text-xs peer-focus:-top-2 peer-focus:text-xs peer-focus:text-emerald-500 peer-disabled:cursor-not-allowed peer-disabled:text-slate-400 peer-disabled:before:bg-transparent"
             >
-              Select an option
+              course Name
             </label>
             <IoIosArrowDown
               className="pointer-events-none absolute top-2.5 right-2 h-5 w-5 fill-slate-400 transition-all peer-focus:fill-emerald-500 peer-disabled:cursor-not-allowed"
               size={30}
             />
           </div>
-          <div className="relative my-6 md:w-60">
+          <div className="relative my-6 w-72 mx-auto text-center sm:w-60">
             <button
               type="submit"
-              className="bg-green-400 rounded-md text-md p-2"
+              className="bg-green-400 rounded-md text-md p-2 cursor-pointer"
             >
               Search
             </button>

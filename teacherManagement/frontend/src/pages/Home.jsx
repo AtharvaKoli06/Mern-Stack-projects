@@ -1,10 +1,18 @@
 import React from "react";
 import Welcome from "../components/Welcome";
+import { Navigate, useLocation } from "react-router-dom";
 
 const Home = () => {
+  const location = useLocation();
+  const authToken = location.state?.accessToken;
+
   return (
     <>
-      <Welcome />
+      {authToken ? (
+        <Welcome />
+      ) : (
+        <Navigate to="/login" state={{ from: location }} replace />
+      )}
     </>
   );
 };

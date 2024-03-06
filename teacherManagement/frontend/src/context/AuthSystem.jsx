@@ -21,8 +21,6 @@ export default function AuthState({ children }) {
 
   const [refreshTokenError, setRefreshTokenError] = useState("");
 
-  let isAuthenticated = null;
-
   const removeToken = () => {
     const axiosInstance = axios.create();
     delete axiosInstance.defaults.headers.common["Authorization"];
@@ -59,14 +57,12 @@ export default function AuthState({ children }) {
       );
       const data = res.data;
       const accessToken = data.data.accessToken;
-      const refreshToken = data.data.refreshToken;
-      setLocalStorage({ accessToken, refreshToken });
-
-      axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
-
+      setLocalStorage(data);
       setLoginList(data);
       setLoginLoading(false);
-      setLocalStorage(data);
+      const expiredToken = JSON.parse(atob(token.split(".")[1]));
+      tokenRefreshExpiry(expiredToken.exp * 1000);
+      axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
     } catch (e) {
       setLoginError(e);
       setLoginLoading(false);
@@ -104,8 +100,7 @@ export default function AuthState({ children }) {
       const data = res.data;
       setLogoutLoading(false);
       removeLocalStorage();
-      localStorage.removeItem("accessToken");
-      localStorage.removeItem("refreshToken");
+      removeToken();
       setLoginList([]);
       setRegisterList([]);
       if (data) {
@@ -123,7 +118,7 @@ export default function AuthState({ children }) {
         refreshUserTokenRef.current
       );
       const newAccessToken = response.data.accessToken;
-      localStorage.setItem("accessToken", newAccessToken);
+      setLocalStorage(newAccessToken);
       axios.defaults.headers.common[
         "Authorization"
       ] = `Bearer ${newAccessToken}`;
@@ -133,19 +128,30 @@ export default function AuthState({ children }) {
       throw error;
     }
   }
+  function tokenRefreshExpiry(expireTime) {
+    const timeUntilRefresh = expireTime - Date.now() - 300000;
+    setTimeout(refreshUserToken, timeUntilRefresh);
+  }
 
   useEffect(() => {
     const fetchDataFromLocalStorage = () => {
       try {
         const data = getLocalStorage();
-        if (data) {
-          setLoginList(data);
-          setRegisterList(data);
-          setLogoutList(data);
-          axios.defaults.headers.common[
-            "Authorization"
-          ] = `Bearer ${data.data.accessToken}`;
-          isAuthenticated = data.data.accessToken;
+        setLoginList(data);
+        setRegisterList(data);
+        setLogoutList(data);
+        axios.defaults.headers.common[
+          "Authorization"
+        ] = `Bearer ${data.data.accessToken}`;
+        token = data.data.accessToken;
+        if (token) {
+          const expiredToken = JSON.parse(atob(token.split(".")[1]));
+          if (expiredToken.exp * 1000 > Date.now()) {
+            tokenRefreshExpiry(expiredToken.exp * 1000);
+            alert("Token as Expired");
+          } else {
+            removeLocalStorage();
+          }
         }
       } catch (error) {
         setLoginError(error);
@@ -167,11 +173,12 @@ export default function AuthState({ children }) {
         logoutList,
         logoutError,
         logoutLoading,
-        isAuthenticated,
+        refreshTokenError,
         loginUser,
         registerUser,
         logoutUser,
         refreshUserToken,
+        tokenRefreshExpiry,
       }}
     >
       {children}

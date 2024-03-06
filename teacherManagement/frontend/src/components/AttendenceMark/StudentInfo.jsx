@@ -4,6 +4,7 @@ import AttendenceList from "./AttendenceList";
 import Loader from "../Loader";
 import Error from "../Error";
 import { FeatureContext } from "../../context/FeaturesSystem";
+import NoDataFound from "../NoDataFound";
 
 const StudentInfo = () => {
   const {
@@ -12,7 +13,7 @@ const StudentInfo = () => {
     studentListingLoading,
     Students,
   } = useContext(FeatureContext);
-  const [error, setError] = useState("");
+  const [error, setError] = useState();
 
   useEffect(() => {
     try {
@@ -23,6 +24,13 @@ const StudentInfo = () => {
   }, []);
 
   const studentDetails = studentListing?.data;
+
+  if (studentListingError) {
+    return <Error error={studentListingError.message} />;
+  }
+  if (studentListingLoading) {
+    return <Loader size={40} />;
+  }
 
   return (
     <div className="flex flex-wrap -mx-3 mb-5">
@@ -55,14 +63,6 @@ const StudentInfo = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {!studentListingLoading && studentListingError ? (
-                      <>
-                        <Error error={error} />
-                      </>
-                    ) : null}
-                    {studentListingLoading && !studentDetails && (
-                      <Loader size={50} />
-                    )}
                     {studentDetails ? (
                       <>
                         {studentDetails.map((fromData) => (
@@ -73,9 +73,7 @@ const StudentInfo = () => {
                         ))}
                       </>
                     ) : (
-                      <div className="text-2xl text-red-500">
-                        Student NOT FOUND {error}
-                      </div>
+                      <NoDataFound size={70} />
                     )}
                   </tbody>
                 </table>

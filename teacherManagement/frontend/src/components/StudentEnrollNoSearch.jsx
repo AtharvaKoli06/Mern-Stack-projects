@@ -1,6 +1,5 @@
 import React, { useRef, useState, useCallback } from "react";
 
-import { AiOutlineCheck } from "react-icons/ai";
 import { CiSearch } from "react-icons/ci";
 import { useNavigate } from "react-router-dom";
 
@@ -9,7 +8,6 @@ const StudentEnrollNoSearch = ({ students }) => {
   const enrollInput = useRef();
   let enrollNumber;
   const [hasError, setHasError] = useState("");
-
   const handleEnroll = useCallback(
     (e) => {
       e.preventDefault();
@@ -29,15 +27,12 @@ const StudentEnrollNoSearch = ({ students }) => {
         }
       }
     },
-    [enrollNumber]
+    [enrollInput.current]
   );
+
   return (
     <>
       <div className="flex items-start sm:gap-20 w-full">
-        <div className="flex items-center">
-          <AiOutlineCheck size={30} />
-          <span className="sm:text-lg text-xs font-thin">MARK ATTENDENCE</span>
-        </div>
         <div className="flex ml-2">
           <input
             type="number"
@@ -51,7 +46,6 @@ const StudentEnrollNoSearch = ({ students }) => {
             onClick={handleEnroll}
             className="bg-green-500 text-black h-10 p-1"
           />
-
           <p
             className={`${
               hasError ? "block" : "hidden"

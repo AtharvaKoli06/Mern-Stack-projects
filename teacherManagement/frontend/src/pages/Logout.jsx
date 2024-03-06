@@ -1,11 +1,9 @@
 import React, { useContext, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 import { FiAlertTriangle } from "react-icons/fi";
 import { AuthContext } from "../context/AuthSystem";
 
 const Logout = () => {
-  const { loginList, loginError, loginLoading, loginUser } =
-    useContext(AuthContext);
   const { logoutList, logoutError, logoutLoading, logoutUser } =
     useContext(AuthContext);
 
@@ -16,25 +14,23 @@ const Logout = () => {
   const accessToken = location.state?.accessToken;
 
   const message = logoutList?.message;
-  console.log(message);
 
   const [errors, setErrors] = useState("");
 
   const handleLogOut = async () => {
     try {
       await logoutUser(accessToken);
-      navigate("/", { state: { message } });
     } catch (error) {
       setErrors(
-        `An error occurred during logout1 ${logoutError.message} Error ${error}`
+        `An error occurred during logout ${logoutError.message} Error ${error}`
       );
     }
+    navigate("/", { state: { message } });
     const hasErrors = Object.values(logoutError).some(
       (errors) => errors !== ""
     );
-    if (hasErrors) {
-      setErrors(`An error occurred during logout2., ${logoutError}`);
-      return;
+    if (!hasErrors) {
+      setErrors(`An error occurred during logout, ${logoutError.message}`);
     }
   };
 
@@ -63,11 +59,20 @@ const Logout = () => {
             Cancel
           </Link>
         </div>
-        {errors && (
-          <>
-            <p className="text-red-500 text-xl">{errors}</p>
-          </>
-        )}
+        <div className="w-full mt-4 p-2 flex justify-around flex-col gap-5 sm:text-xl text-sm">
+          {errors && (
+            <>
+              <div>
+                <p className="text-red-500">{errors}</p>
+              </div>
+              <div>
+                <Link to="/login" className="text-green-500">
+                  Login
+                </Link>
+              </div>
+            </>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -5,8 +5,7 @@ import { Link } from "react-router-dom";
 import { AuthContext } from "../context/AuthSystem";
 
 const Navbar = () => {
-  const { loginList, loginError, loginLoading, LoginUser } =
-    useContext(AuthContext);
+  const { loginList } = useContext(AuthContext);
 
   const user = loginList?.data?.user;
   const accessToken = loginList?.data?.accessToken;
@@ -24,7 +23,11 @@ const Navbar = () => {
         </div>
         <div className="p-2 sm:w-2/4">
           <ul className="flex justify-around items-center gap-3 text-xs lg:text-xl ">
-            <Link to="/" className="cursor-pointer hover:underline">
+            <Link
+              to="/"
+              state={{ accessToken }}
+              className="cursor-pointer hover:underline"
+            >
               Home
             </Link>
             <Link to="/about" className="cursor-pointer hover:underline">

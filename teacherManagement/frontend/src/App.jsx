@@ -2,7 +2,6 @@ import React from "react";
 import Routers from "./router/Routers";
 
 import { BrowserRouter } from "react-router-dom";
-
 const App = () => {
   return (
     <>
