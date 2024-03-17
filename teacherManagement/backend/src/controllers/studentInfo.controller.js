@@ -68,6 +68,7 @@ export const studentInfo = asyncHandler(async (req, res) => {
       "Student with enrollNo, studentsName already exists..?"
     );
   }
+  console.log(req.files);
   const avatarLocalPath = req.files?.avatar[0]?.path;
   let coverImageLocalPath;
   if (
@@ -98,7 +99,7 @@ export const studentInfo = asyncHandler(async (req, res) => {
     courseName,
     section,
     prn,
-    avatar: avatar.url,
+    avatar: avatar?.url,
     coverImage: coverImage?.url || "",
     address,
     whatsAppNo,
@@ -174,20 +175,20 @@ export const allStudentInfo = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, students, "Students Fetched success..!"));
 });
 export const deleteStudentInfo = asyncHandler(async (req, res) => {
-  const { id } = req.body;
-
+  const id = req.params.id;
   if (!id) {
     throw new ApiError(400, "ID required");
   }
   const students = await StudentData.findById(id);
   if (!students) {
-    throw new ApiError(500, "students not found");
+    throw new ApiError(500, "student not found");
   }
   const studentToDelete = await StudentData.deleteOne();
 
   if (!studentToDelete) {
     throw new ApiError(500, "students To delete Something went wrong..!");
   }
+
   return res
     .status(201)
     .json(
@@ -253,9 +254,8 @@ export const updateStudentInfo = asyncHandler(async (req, res) => {
   ) {
     throw new ApiError(400, "All properties are required to update");
   }
-  console.log(req);
   const students = await StudentData.findByIdAndUpdate(
-    req.student?._id,
+    req.body._id,
     {
       $set: {
         rollNo: rollNo,

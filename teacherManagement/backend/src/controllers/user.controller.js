@@ -59,15 +59,10 @@ const registerUser = asyncHandler(async (req, res) => {
 });
 
 const loginUser = asyncHandler(async (req, res) => {
-  const { username, year, password } = req.body;
+  const { username, password } = req.body;
 
-  const behindDate = new Date().getFullYear - 1;
-
-  if (!username && !year) {
-    throw new ApiError(400, "username and year, roles is required");
-  }
-  if (year === behindDate) {
-    throw new ApiError(400, "you have defined last year");
+  if (!username) {
+    throw new ApiError(400, "username is required");
   }
 
   const user = await User.findOne({

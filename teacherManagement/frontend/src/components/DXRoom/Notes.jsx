@@ -1,8 +1,25 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { FaCheck } from "react-icons/fa";
 import SelectedSearch from "./SelectedSearch";
+import { FeatureContext } from "../../context/FeaturesSystem";
+
+import NoDataFound from "../NoDataFound.jsx";
+import Error from "../Error.jsx";
 
 const Notes = () => {
+  const {
+    studentsAssignmentsList,
+    deleteStudent,
+    setStudentsAssignmentsList,
+    studentsAssignmentLoading,
+    studentsAssignmentsError,
+  } = useContext(FeatureContext);
+
+  const data = studentsAssignmentsList;
+  const assignmentCopy = { ...data };
+  const assignments = assignmentCopy?.data;
+  console.log(assignments);
+
   const [date, setDate] = useState({
     fromDate: "",
     toDate: "",
@@ -15,10 +32,31 @@ const Notes = () => {
       [name]: value,
     });
   };
+  function filterData(fromDate, toDate) {
+    const filtered = [];
+    const fDate = new Date(fromDate);
+    const tDate = new Date(toDate);
+    assignments.map((item, index) => {
+      const currentDate = new Date(item.currentDate);
+      if (
+        currentDate >= fDate &&
+        currentDate <= tDate &&
+        item.courseName === courseName
+      ) {
+        filtered.push(dateArray[index]);
+      }
+    });
+    setMessage(filtered);
+  }
   const handleDateSubmit = (e) => {
     e.preventDefault();
+    filterData(date.fromDate, date.toDate);
+    setDate({
+      fromDate: "",
+      toDate: "",
+      courseName: "",
+    });
   };
-  console.log(date);
   return (
     <>
       <div className="w-full p-10">
@@ -71,7 +109,7 @@ const Notes = () => {
                 type="submit"
                 className="bg-green-400 rounded-md text-md p-2 cursor-pointer"
               >
-                Filter
+                Search
               </button>
             </div>
           </form>
@@ -86,27 +124,77 @@ const Notes = () => {
                       <thead className="align-bottom">
                         <tr className="font-semibold text-[0.95rem] text-secondary-dark">
                           <th className="pb-3 pr-1 text-start min-w-[30px]">
-                            Sr No.
+                            Roll no.
                           </th>
-                          <th className="pb-3 text-end min-w-[30px]">Class</th>
+                          <th className="pb-3 pr-1 text-start min-w-[30px]">
+                            Students Name
+                          </th>
+                          <th className="pb-3 text-end min-w-[30px]">
+                            Surname
+                          </th>
+                          <th className="pb-3 text-end min-w-[130px] ">
+                            Course Name
+                          </th>
+                          <th className="pb-3 pr-12 text-end min-w-[135px]">
+                            year
+                          </th>
+                          <th className="pb-3 pr-12 text-end min-w-[80px]">
+                            subject
+                          </th>
                           <th className="pb-3 text-center min-w-[50px]">
-                            Date
+                            Description
                           </th>
                         </tr>
                       </thead>
                       <tbody>
-                        {/* {studentDetails ? (
-                          <>
-                            {studentDetails.map((fromData) => (
-                              <AttendenceList
-                                key={fromData._id}
-                                formData={fromData}
-                              />
-                            ))}
-                          </>
-                        ) : (
-                          <NoDataFound size={70} />
-                        )} */}
+                        {!studentsAssignmentLoading &&
+                          studentsAssignmentsError && (
+                            <Error error={studentsAssignmentsError.message} />
+                          )}
+                        {studentsAssignmentLoading && <Loader />}
+                        {assignments &&
+                          assignments.map((student) => (
+                            <tr
+                              key={student._id}
+                              className="border-b font-thin text-sm border-dashed last:border-b-0"
+                            >
+                              <td className="p-3 pl-0">
+                                <div className="flex items-center">
+                                  {student.rollNo}
+                                </div>
+                              </td>
+                              <td className="p-3 pl-0">
+                                <div className="flex items-center">
+                                  {student.studentsName}
+                                </div>
+                              </td>
+                              <td className="p-3 pr-0 text-center">
+                                <span className="font-semibold text-light-inverse text-md/normal">
+                                  {student.surName}
+                                </span>
+                              </td>
+                              <td className="p-3 pl-0">
+                                <div className="text-center ">
+                                  {student.courseName}
+                                </div>
+                              </td>
+                              <td className="p-3 pr-0 text-center">
+                                <span className="font-semibold text-light-inverse text-md/normal">
+                                  {student.year}
+                                </span>
+                              </td>
+                              <td className="p-3 pl-0">
+                                <div className="text-center">
+                                  {student.subject}
+                                </div>
+                              </td>
+                              <td className="p-3 pl-0">
+                                <div className="text-center">
+                                  {student.description}
+                                </div>
+                              </td>
+                            </tr>
+                          ))}
                       </tbody>
                     </table>
                   </div>

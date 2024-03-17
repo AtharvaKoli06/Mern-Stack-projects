@@ -1,9 +1,11 @@
-import React, { useRef, useState, useCallback } from "react";
+import React, { useRef, useState, useCallback, useContext } from "react";
 
 import { CiSearch } from "react-icons/ci";
 import { useNavigate } from "react-router-dom";
+import { FeatureContext } from "../context/FeaturesSystem";
 
 const StudentEnrollNoSearch = ({ students }) => {
+  const { studentListingError } = useContext(FeatureContext);
   const navigate = useNavigate();
   const enrollInput = useRef();
   let enrollNumber;
@@ -43,7 +45,19 @@ const StudentEnrollNoSearch = ({ students }) => {
           />
           <CiSearch
             size={35}
-            onClick={handleEnroll}
+            onClick={
+              !studentListingError.message ? (
+                handleEnroll
+              ) : (
+                <p
+                  className={`${
+                    studentListingError.message ? "block" : "hidden"
+                  } bg-red-100 border w-80 border-red-400 text-red-700 px-4 py-3 rounded relative`}
+                >
+                  {studentListingError.message}
+                </p>
+              )
+            }
             className="bg-green-500 text-black h-10 p-1"
           />
           <p

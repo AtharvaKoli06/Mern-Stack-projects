@@ -1,8 +1,10 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useContext, useState } from "react";
 import { IoIosArrowDown } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
+import { FeatureContext } from "../context/FeaturesSystem";
 
 const StudentSearch = ({ students }) => {
+  const { studentListingError } = useContext(FeatureContext);
   const navigate = useNavigate();
   const [selected, setSelected] = useState({
     year: "",
@@ -43,7 +45,7 @@ const StudentSearch = ({ students }) => {
       <div className="w-full">
         <form
           className="sm:w-full w-5/6 grid sm:grid-cols-2 lg:grid-cols-3 place-content-center gap-15 p-2 text-lg"
-          onSubmit={handleOptionsSubmit}
+          onSubmit={!studentListingError ? handleOptionsSubmit : null}
         >
           <div className="relative my-6 w-72 mx-auto sm:w-60">
             <select

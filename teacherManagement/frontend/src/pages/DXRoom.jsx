@@ -1,7 +1,6 @@
 import React from "react";
 import sendAssignment from "../../public/sendassignment.png";
 import assignmentReport from "../../public/assignmentreport.png";
-import studentNotification from "../../public/noticeboard.png";
 import recordedClass from "../../public/recording.jpeg";
 import notes from "../../public/notes.jpeg";
 import { Link } from "react-router-dom";
@@ -22,14 +21,14 @@ const DXRoom = () => {
           </h1>
         </Link>
         <Link
-          to="/assignment-report"
+          to="/teachers-messages"
           className="border w-full flex items-center justify-center rounded-full bg-green-400 h-20 cursor-pointer"
         >
           <div className="w-1/3">
             <img src={assignmentReport} className="w-10 sm:w-14" alt="" />
           </div>
           <h1 className="text-sm text-bold sm:text-lg sm:font-bold">
-            ASSIGNMENTS REPORT
+            Teacher's messages
           </h1>
         </Link>
         <Link

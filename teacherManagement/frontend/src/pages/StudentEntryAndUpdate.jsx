@@ -16,6 +16,7 @@ const StudentEntryAndUpdate = () => {
     studentListing,
     studentError,
     studentListingError,
+    setStudentList,
     createStudent,
     updateStudent,
     deleteStudent,
@@ -52,7 +53,6 @@ const StudentEntryAndUpdate = () => {
 
   const [studentDetail, setStudentDetail] = useState(false);
   const [studentData, setStudentData] = useState([]);
-  const [studentToDelete, setStudentToDelete] = useState([]);
 
   const error = studentListingError.message;
 
@@ -107,7 +107,6 @@ const StudentEntryAndUpdate = () => {
                     </div>
                   </div>
                   <div className="w-full flex items-center justify-end ">
-                    {studentError.message}
                     {studentLoading ? <Loader /> : null}
                   </div>
                   <StudentDetails
@@ -125,7 +124,6 @@ const StudentEntryAndUpdate = () => {
                     </span>
                   </div>
                   <div className="flex items-center justify-end ">
-                    {studentError.message}
                     {studentLoading ? <Loader /> : null}
                     <StudentEnrollNoSearch students={students} />
                   </div>
@@ -154,14 +152,13 @@ const StudentEntryAndUpdate = () => {
                   </div>
                   <div className="flex items-center justify-end ">
                     <StudentEnrollNoSearch students={students} />
-                    {studentError.message}
+                    <p className="text-md text-red-500"></p>
                     {studentLoading ? <Loader /> : null}
                   </div>
                   <CrudSearchList
-                    studentToDelete={studentToDelete}
-                    setStudentToDelete={setStudentToDelete}
-                    deleteStudents={deleteStudents}
+                    deleteToggleStudents={deleteStudents}
                     deleteStudent={deleteStudent}
+                    setStudentList={setStudentList}
                   />
                 </>
               )}

@@ -3,7 +3,7 @@ import React, { useContext } from "react";
 import { MdOutlineIntegrationInstructions } from "react-icons/md";
 import StudentSearch from "../StudentSearch";
 import StudentEnrollNoSearch from "../StudentEnrollNoSearch";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { FeatureContext } from "../../context/FeaturesSystem";
 import Loader from "../Loader";
 
@@ -11,13 +11,8 @@ const Search = () => {
   const location = useLocation();
   const searchData = location.state?.studentData;
 
-  const {
-    studentList,
-    studentListingError,
-    studentLoading,
-    studentError,
-    studentListing,
-  } = useContext(FeatureContext);
+  const { studentList, studentLoading, studentListing } =
+    useContext(FeatureContext);
 
   let message = studentList?.message;
 
@@ -29,17 +24,8 @@ const Search = () => {
   return (
     <>
       <div className="w-10/12 mx-auto mt-14 flex justify-around border-b-4 gap-2 relative ">
-        {!studentListingError.message ? (
-          <StudentEnrollNoSearch students={student} />
-        ) : (
-          <p
-            className={`${
-              studentListingError.message ? "block" : "hidden"
-            } bg-red-100 border w-1/4 border-red-400 text-red-700 px-4 py-3 rounded relative`}
-          >
-            {studentListingError.message}
-          </p>
-        )}
+        <StudentEnrollNoSearch students={student} />
+
         <div className="border bg-green-400 p-2 rounded-md">
           {searchData?.length ? searchData.length : 0}
         </div>
@@ -60,36 +46,24 @@ const Search = () => {
                 <h1>
                   <span className="font-bold">Note:{"  "}</span>In case of
                   missing student data, extra student, or spelling correction,
-                  Please click on Update Data in features.
+                  Please click on student credentials.
                 </h1>
               </div>
             </div>
           </div>
         </div>
+        <div className="border-b-2 p-2 ">
+          <Link to="student-credentials" className="text-md text-green-500">
+            student-credentials
+          </Link>
+        </div>
       </div>
-      {!studentListingError ? (
-        <StudentSearch students={student} />
-      ) : (
-        <p
-          className={`${
-            studentListingError.message ? "block" : "hidden"
-          } bg-red-100 border w-1/4 border-red-400 text-red-700 px-4 py-3 rounded relative`}
-        >
-          {studentListingError.message}
-        </p>
-      )}
-      <div className="w-72 p-2 right-0 top-52 absolute">
-        <p
-          className={`${
-            studentError.message ? "block" : "hidden"
-          } bg-red-100 border w-1/4 border-red-400 text-red-700 px-4 py-3 rounded relative`}
-        >
-          {studentError.message}
-        </p>
+      <StudentSearch students={student} />
+      <div className="w-60 p-2 right-0 left-32 relative">
         <p
           className={`${
             message ? "block" : "hidden"
-          } bg-red-100 border w-1/4 border-red-400 text-green-700 px-4 py-3 rounded relative`}
+          } bg-green-100 border w-72 border-red-400 text-green-700 sm:px-4 p-1 sm:py-3 rounded absolute right-10 top-20  sm:top-0 `}
         >
           {message}
         </p>

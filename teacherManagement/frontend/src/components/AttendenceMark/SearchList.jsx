@@ -11,10 +11,14 @@ const SearchList = () => {
     createAttendList,
     markAttendError,
     markAttendLoading,
+    markAttendList,
+    markAttendenceList,
   } = useContext(FeatureContext);
 
   const [includes, setIncludes] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
+  const [isConform, setIsConform] = useState(false);
+
   const [errors, setErrors] = useState("");
 
   let attendStudent = studentListing?.data;
@@ -175,20 +179,25 @@ const SearchList = () => {
                               </td>
                               <td className="p-3 pr-0 text-start">
                                 <div className="relative flex flex-wrap items-center">
-                                  <input
-                                    className={`relative w-8 h-4 transition-colors rounded-lg appearance-none cursor-pointer ring-2 ring-inset ring-slate-300 hover:ring-slate-400 after:hover:ring-slate-600
+                                  {!isConform && (
+                                    <>
+                                      <input
+                                        id=""
+                                        className={`relative w-8 h-4 transition-colors rounded-lg appearance-none cursor-pointer ring-2 ring-inset ring-slate-300 hover:ring-slate-400 after:hover:ring-slate-600
                                     'checked:hover:bg-emerald-300 checked:hover:ring-emerald-600 checked:after:hover:ring-emerald-600 checked:focus:bg-emerald-400 checked:focus:ring-emerald-700 checked:after:focus:ring-emerald-700 checked:bg-emerald-200 checked:ring-emerald-500 checked:after:left-4 checked:after:bg-white checked:after:ring-emerald-500 focus:outline-none disabled:cursor-not-allowed disabled:border-slate-200 disabled:after:ring-slate-300 focus-visible:outline-none peer after:absolute after:top-0 after:left-0 after:h-4 after:w-4 after:rounded-full after:bg-white after:ring-2 after:ring-inset after:ring-slate-500 after:transition-all `}
-                                    type="checkbox"
-                                    name="presentOrAbsent"
-                                    value={isChecked}
-                                    onChange={() => handleIsChecked(index)}
-                                  />
-                                  <label
-                                    className="cursor-pointer pl-2 text-slate-500 peer-disabled:cursor-not-allowed peer-disabled:text-slate-400"
-                                    htmlFor="id-c01"
-                                  >
-                                    {presentOrAbsent[index] ? "P" : "A"}
-                                  </label>
+                                        type="checkbox"
+                                        name="presentOrAbsent"
+                                        value={isChecked}
+                                        onChange={() => handleIsChecked(index)}
+                                      />
+                                      <label
+                                        className="cursor-pointer pl-2 text-slate-500 peer-disabled:cursor-not-allowed peer-disabled:text-slate-400"
+                                        htmlFor="id-c01"
+                                      >
+                                        {presentOrAbsent[index] ? "P" : "A"}
+                                      </label>
+                                    </>
+                                  )}
                                 </div>
                               </td>
                             </tr>
@@ -208,11 +217,37 @@ const SearchList = () => {
                   </div>
                 </div>
                 {includes && (
+                  <div className="flex items-center justify-end gap-2 ">
+                    <input
+                      type="radio"
+                      value={isConform}
+                      name="isConform"
+                      id="isConform"
+                      onClick={() => setIsConform(!isConform)}
+                    />
+                    <span>Confirm Your attendence </span>
+                  </div>
+                )}
+                {isConform && (
                   <form
                     onSubmit={handleAttendenceSubmit}
                     onKeyDown={handleAttendenceSubmit}
                     className="w-full mx-auto flex gap-10 items-center justify-center text-md sm:text-lg p-2"
                   >
+                    <p
+                      className={`${
+                        markAttendList?.message ? "block" : "hidden"
+                      } text-md text-green-500 hover:underline ml-12`}
+                    >
+                      {markAttendList?.message}
+                    </p>
+                    <p
+                      className={`${
+                        markAttendError?.message ? "block" : "hidden"
+                      } text-md text-red-500 hover:underline ml-12`}
+                    >
+                      {markAttendError?.message}
+                    </p>
                     <select
                       name="lecture"
                       value={Attend.lecture}
@@ -245,18 +280,18 @@ const SearchList = () => {
                     </button>
                     <p
                       className={`${
-                        markAttendError.message ? "block" : "hidden"
+                        markAttendError?.message ? "block" : "hidden"
                       } bg-red-100 border border-red-400 text-red-700 p-2 rounded relative`}
                     >
                       {errors} --
-                      {markAttendError.message}
+                      {markAttendError?.message}
                     </p>
                     <p
                       className={`${
-                        markAttendenceList.success ? "block" : "hidden"
+                        markAttendenceList?.success ? "block" : "hidden"
                       } bg-red-100 border border-red-400 text-red-700 p-2 rounded relative`}
                     >
-                      {markAttendenceList.message}
+                      {markAttendenceList?.message}
                     </p>
                   </form>
                 )}

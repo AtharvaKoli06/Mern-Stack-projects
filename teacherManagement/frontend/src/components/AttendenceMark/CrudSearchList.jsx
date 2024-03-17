@@ -2,15 +2,18 @@ import React, { useState } from "react";
 
 import { useLocation } from "react-router-dom";
 
+import { Navigate } from "react-router-dom";
+
 const CrudSearchList = ({
   setStudentDetail,
   studentDetail,
-  deleteStudents,
+  deleteToggleStudents,
   setStudentData,
   deleteStudent,
+  setStudentListing,
 }) => {
   const location = useLocation();
-  const searchData = location.state?.studentData;
+  let searchData = location.state?.studentData;
 
   const [error, setError] = useState();
 
@@ -18,18 +21,24 @@ const CrudSearchList = ({
     setStudentData(searchData.filter((student) => student._id === id));
     setStudentDetail(!studentDetail);
   };
+
   const handleStudentToDelete = async (id) => {
-    const data = searchData.filter((student) => student._id === id);
-    const idToDelete = data.map((data) => data._id);
-    const userToDelete = data.map((data) => data.studentsName);
-    alert(`Are Your sure your want to delete ${userToDelete[0]} `);
     try {
-      await deleteStudent(idToDelete[0]);
+      await deleteStudent(id);
+      const data = searchData.filter((item) => item._id !== id);
+      setStudentListing((prevData) => ({
+        ...prevData,
+        data,
+      }));
+      <Navigate
+        to="/mark-attendence/student-credentials"
+        state={{ from: location }}
+        replace
+      />;
     } catch (error) {
       setError(error);
     }
   };
-
   return (
     <>
       <div className="w-full">
@@ -89,9 +98,9 @@ const CrudSearchList = ({
                                   {data.courseName}
                                 </span>
                               </td>
-                              <td className="p-3 pr-0 text-start">
+                              <td className="p-3 pr-0 text-start relative">
                                 <div className="relative flex flex-wrap items-center">
-                                  {!deleteStudents ? (
+                                  {!deleteToggleStudents ? (
                                     <button
                                       className="group relative h-10 w-48 overflow-hidden rounded-xl bg-green-500 text-sm font-bold text-white sm:text-lg mt-5"
                                       onClick={() =>
@@ -102,15 +111,29 @@ const CrudSearchList = ({
                                       <div className="absolute inset-0 h-full w-full scale-0 rounded-2xl transition-all duration-300 group-hover:scale-100 group-hover:bg-white/30"></div>
                                     </button>
                                   ) : (
-                                    <button
-                                      className="group relative h-10 w-48 overflow-hidden rounded-xl bg-green-500 text-sm font-bold text-white sm:text-lg mt-5"
-                                      onClick={() =>
-                                        handleStudentToDelete(data._id)
-                                      }
-                                    >
-                                      {!error ? "DELETE" : error.message}
-                                      <div className="absolute inset-0 h-full w-full scale-0 rounded-2xl transition-all duration-300 group-hover:scale-100 group-hover:bg-white/30"></div>
-                                    </button>
+                                    <li className="flex items-center justify-center gap-1 cursor-pointer relative group">
+                                      <button className="relative h-10 w-48 overflow-hidden rounded-xl bg-green-500 text-sm font-bold text-white sm:text-lg mt-5">
+                                        {!error ? "DELETE" : error.message}
+                                        <div className="absolute inset-0 h-full w-full scale-0 rounded-2xl transition-all duration-300 group-hover:scale-100 group-hover:bg-white/30"></div>
+                                      </button>
+                                      <div className="absolute shadow-lg rounded-md p-2 z-50 hidden group-hover:block text-black bg-white w-[200px] border">
+                                        <ul className="text-center">
+                                          <li className="p-2 text-xs">
+                                            Are you sure want to Delete
+                                          </li>
+                                          <button
+                                            type="submit"
+                                            className="group relative h-10 w-48 overflow-hidden rounded-xl bg-green-500 text-sm font-bold text-white sm:text-lg mt-5"
+                                            onClick={() =>
+                                              handleStudentToDelete(data._id)
+                                            }
+                                          >
+                                            Yes
+                                            <div className="absolute inset-0 h-full w-full scale-0 rounded-2xl transition-all duration-300 group-hover:scale-100 group-hover:bg-white/30"></div>
+                                          </button>
+                                        </ul>
+                                      </div>
+                                    </li>
                                   )}
                                 </div>
                               </td>

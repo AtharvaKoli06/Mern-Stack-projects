@@ -9,12 +9,9 @@ import LiveClassReport from "../pages/LiveClassReport";
 import StudentReports from "../pages/StudentReports";
 import AddMarks from "../pages/AddMarks";
 import CreateExam from "../pages/CreateExam";
-import LeaveNote from "../pages/LeaveNote";
 import Remark from "../pages/Remark";
-import Reports from "../pages/Reports";
 import TimeTable from "../pages/TimeTable";
 import Lists from "../components/AttendenceReport/Lists";
-import DailyReport from "../pages/DailyReport";
 import Register from "../pages/Register";
 import Login from "../pages/Login";
 import RequireAuth from "../auth/RequireAuth";
@@ -26,12 +23,15 @@ import StudentReport from "../components/AttendenceReport/StudentReport";
 import StudentsSearchList from "../components/StudentsReports/StudentsSearchList";
 import SendingAssignment from "../components/DXRoom/SendingAssignment";
 import DXRoom from "../pages/DXRoom";
-import AssignmentReport from "../components/DXRoom/AssignmentReport";
-import StudentsNotification from "../components/DXRoom/StudentsNotification";
+import TeachersMessage from "../components/DXRoom/TeachersMessage";
 import RecordedClass from "../components/DXRoom/RecordedClass";
 import Notes from "../components/DXRoom/Notes";
 import StudentEntryAndUpdate from "../pages/StudentEntryAndUpdate";
 import CrudSearchList from "../components/AttendenceMark/CrudSearchList";
+import Question from "../components/ExamCreate/Question.jsx";
+import Search from "../components/ExamCreate/Search.jsx";
+import ExamLists from "../components/ExamCreate/Lists.jsx";
+import ExamSearchLists from "../components/ExamCreate/ExamLists.jsx";
 
 const Routers = () => (
   <Routes>
@@ -42,23 +42,25 @@ const Routers = () => (
       <Route path="logout" element={<Logout />} />
       <Route path="about" element={<About />} />
       <Route path="guide" element={<Guide />} />
-      <Route
-        path="student-credentials-update"
-        element={<StudentEntryAndUpdate />}
-      >
-        <Route path="studentEnrollNo/:enrollNo" element={<CrudSearchList />} />
-      </Route>
       <Route path="mark-attendence" element={<AttendenceMark />}>
         <Route index element={<StudentInfo />} />
         <Route path="details" element={<SearchList />} />
         <Route path="studentEnrollNo/:enrollNo" element={<SearchList />} />
+        <Route path="student-credentials" element={<StudentEntryAndUpdate />}>
+          <Route
+            path="studentEnrollNo/:enrollNo"
+            element={<CrudSearchList />}
+          />
+        </Route>
       </Route>
+
       <Route path="live-class-attendence-report" element={<LiveClassReport />}>
         <Route index element={<StudentReport />} />
         <Route path="details/:enrollNo" element={<Lists />} />
         <Route path="details" element={<StudentReport />} />
         <Route path="lists" element={<Lists />} />
       </Route>
+
       <Route path="student-report" element={<StudentReports />}>
         <Route
           path="studentEnrollNo/:enrollNo"
@@ -66,18 +68,26 @@ const Routers = () => (
         />
         <Route path="details" element={<StudentsSearchList />} />
       </Route>
+
       <Route path="upload-lecture-Assignments" element={<DXRoom />} />
       <Route path="send-assignments" element={<SendingAssignment />} />
-      <Route path="assignment-report" element={<AssignmentReport />} />
-      <Route path="students-notification" element={<StudentsNotification />} />
+      <Route path="teachers-messages" element={<TeachersMessage />} />
       <Route path="recorded-class" element={<RecordedClass />} />
+
       <Route path="notes" element={<Notes />} />
-      <Route path="add-marks" element={<AddMarks />} />
-      <Route path="create-exam" element={<CreateExam />} />
-      <Route path="leavenote" element={<LeaveNote />} />
+      <Route path="add-marks" element={<AddMarks />}>
+        <Route path="details" element={<StudentReport />} />
+      </Route>
+
+      <Route path="create-exam" element={<CreateExam />}>
+        <Route index element={<ExamLists />} />
+        <Route path="examCheck" element={<Search />}>
+          <Route path="examInfo" element={<ExamSearchLists />}>
+            <Route path="questions" element={<Question />} />
+          </Route>
+        </Route>
+      </Route>
       <Route path="complaintbox" element={<Remark />} />
-      <Route path="daily-report" element={<DailyReport />} />
-      <Route path="activity" element={<Reports />} />
       <Route path="timetable" element={<TimeTable />} />
       <Route element={<RequireAuth />}>
         <Route path="/:username/features" element={<Features />} />

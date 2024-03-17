@@ -3,6 +3,7 @@ import { MdOutlineAssignment } from "react-icons/md";
 import SelectedSearch from "./SelectedSearch";
 import { FeatureContext } from "../../context/FeaturesSystem";
 import Loader from "../Loader";
+import Error from "../Error";
 
 const SendingAssignment = () => {
   const {
@@ -13,13 +14,17 @@ const SendingAssignment = () => {
   } = useContext(FeatureContext);
 
   useEffect(() => {
-    assignments();
+    const handleAssignmentSubmit = async () => {
+      await assignments();
+    };
+    handleAssignmentSubmit();
   }, []);
-
-  console.log(studentsAssignmentsList.data);
 
   const studentsAssignment = studentsAssignmentsList?.data;
 
+  if (studentsAssignmentsError) {
+    return <Error error={studentsAssignmentsError.message} />;
+  }
   return (
     <>
       <div className="w-full p-10">
@@ -33,10 +38,10 @@ const SendingAssignment = () => {
         <div className="mt-10">
           <p
             className={`${
-              studentsAssignmentsError.message ? "block" : "hidden"
+              studentsAssignmentsError?.message ? "block" : "hidden"
             } bg-red-100 border border-red-400 text-red-700 p-2 rounded relative`}
           >
-            {studentsAssignmentsError.message}
+            {studentsAssignmentsError?.message}
           </p>
           <div className="flex flex-wrap -mx-3 mb-5">
             <div className="w-full max-w-full px-3 mb-6 mx-auto">
@@ -47,6 +52,9 @@ const SendingAssignment = () => {
                       <table className="w-full my-0 align-middle text-dark border-neutral-200 font-thin">
                         <thead className="align-bottom">
                           <tr className="font-semibold text-[0.95rem] text-secondary-dark">
+                            <th className="pb-3 pr-1 text-start min-w-[30px]">
+                              Roll no.
+                            </th>
                             <th className="pb-3 pr-1 text-start min-w-[30px]">
                               Students Name
                             </th>
@@ -68,14 +76,18 @@ const SendingAssignment = () => {
                           </tr>
                         </thead>
                         <tbody>
-                          {!studentsAssignmentLoading &&
-                            studentsAssignmentsError && (
-                              <Error error={studentsAssignmentsError.message} />
-                            )}
                           {studentsAssignmentLoading && <Loader />}
                           {studentsAssignment &&
                             studentsAssignment.map((student) => (
-                              <tr className="border-b font-thin text-sm border-dashed last:border-b-0">
+                              <tr
+                                key={student._id}
+                                className="border-b font-thin text-sm border-dashed last:border-b-0"
+                              >
+                                <td className="p-3 pl-0">
+                                  <div className="flex items-center">
+                                    {student.rollNo}
+                                  </div>
+                                </td>
                                 <td className="p-3 pl-0">
                                   <div className="flex items-center">
                                     {student.studentsName}

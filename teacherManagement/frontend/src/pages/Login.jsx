@@ -27,7 +27,6 @@ const Login = () => {
       await loginUser(formData);
       axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
       setFormData({
-        year: "",
         username: "",
         password: "",
       });
@@ -53,11 +52,6 @@ const Login = () => {
     }));
   };
 
-  const years = Array.from(
-    { length: 101 },
-    (_, i) => new Date().getFullYear() - i
-  );
-
   const content = loginLoading ? (
     <Loader size={50} />
   ) : (
@@ -66,23 +60,9 @@ const Login = () => {
         (refreshTokenError && (
           <p className={`text-red-500 ${user ? "hidden" : "flex"} `}>
             {errors}
-            {refreshTokenError.message}
+            {loginError?.message}
           </p>
         ))}
-      <select
-        value={formData.year}
-        name="year"
-        className="p-2 my-2 rounded w-[100%] focus:outline-blue-600"
-        onChange={handleChange}
-      >
-        <option value="">Select Year</option>
-        {years.map((year) => (
-          <option key={year} value={year}>
-            {year}
-          </option>
-        ))}
-      </select>
-
       <input
         className="p-2 my-2 rounded w-[100%] focus:outline-blue-600"
         placeholder="Username..."

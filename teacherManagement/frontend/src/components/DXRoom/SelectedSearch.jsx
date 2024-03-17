@@ -3,18 +3,13 @@ import { IoIosArrowDown } from "react-icons/io";
 import { subjects } from "./subjectsData";
 import { FeatureContext } from "../../context/FeaturesSystem";
 import Loader from "../Loader";
-import Error from "../Error.jsx";
 
 const SelectedSearch = () => {
   const [file, setFile] = useState();
   const [error, setError] = useState("");
 
-  const {
-    sendAssignments,
-    sendAssignmentError,
-    sendAssignmentLoading,
-    sendAssignmentList,
-  } = useContext(FeatureContext);
+  const { sendAssignments, sendAssignmentError, sendAssignmentLoading } =
+    useContext(FeatureContext);
   const [selected, setSelected] = useState({
     year: "",
     courseName: "",
@@ -22,18 +17,21 @@ const SelectedSearch = () => {
     description: "",
     subject: "",
     surName: "",
+    rollNo: "",
   });
   const handleSelectChange = (e) => {
     const { name, value } = e.target;
     setSelected({
       ...selected,
       [name]: value.toLowerCase(),
+      currentDate: new Date().toLocaleDateString(),
+      currentTime: new Date().toLocaleTimeString(),
     });
   };
   const handleOptionsSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
-    formData.append("assignment", file);
+    formData.append("assignmentOrNotes", file);
     Object.entries(selected).forEach(([key, value]) => {
       formData.append(key, value);
     });
@@ -48,9 +46,7 @@ const SelectedSearch = () => {
       year: "",
       courseName: "",
       studentsName: "",
-      detailsInfo: "",
       description: "",
-      fileToUpload: "",
       subject: "",
       surName: "",
     });
@@ -66,20 +62,18 @@ const SelectedSearch = () => {
   }
   const subject = filterSubjectByKey(selected.courseName);
 
-  if (sendAssignmentLoading) {
-    return <Loader />;
-  }
   return (
     <>
       <div className="w-full ">
         <form
-          className="max-w-96 mx-auto rounded-lg flex flex-col items-center justify-center p-2 text-lg shadow-lg mt-10 gap-2 "
+          className="items-center place-content-center mx-auto grid lg:grid-cols-2 p-2 text-lg shadow-lg mt-10 gap-2p-4 sm:p-10 bg-gray-50 rounded-md w-[300px] md:w-[600px] text-center overflow-y-auto relative "
           onSubmit={handleOptionsSubmit}
         >
+          {sendAssignmentLoading && <Loader />}
           <p
             className={`${
               sendAssignmentError.message ? "block" : "hidden"
-            } bg-red-100 border border-red-400 text-red-700 px-1 py-1 rounded relative`}
+            } bg-red-100 border border-red-400 text-red-700 px-1 py-1 rounded absolute top-0 `}
           >
             {sendAssignmentError.message}
             {error}
@@ -142,6 +136,24 @@ const SelectedSearch = () => {
               className="pointer-events-none absolute top-2.5 left-2 z-[1] px-2 text-sm text-slate-400 transition-all before:absolute before:top-0 before:left-0 before:z-[-1] before:block before:h-full before:w-full before:bg-white before:transition-all peer-required:after:text-pink-500 peer-required:after:content-['\00a0*'] peer-valid:-top-2 peer-valid:text-xs peer-focus:-top-2 peer-focus:text-xs peer-focus:text-emerald-500 peer-disabled:cursor-not-allowed peer-disabled:text-slate-400 peer-disabled:before:bg-transparent"
             >
               StudentsName
+            </label>
+          </div>
+          <div className="relative my-2 w-72 sm:w-60">
+            <input
+              type="text"
+              name="rollNo"
+              id="rollNo"
+              value={selected.rollNo}
+              onChange={handleSelectChange}
+              autoComplete="off"
+              required
+              className="peer relative h-10 w-full appearance-none border-b border-slate-200 bg-white px-4 text-sm text-slate-500 outline-none transition-all autofill:bg-white focus:border-emerald-500 focus-visible:outline-none focus:focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400"
+            />
+            <label
+              htmlFor="rollNo"
+              className="pointer-events-none absolute top-2.5 left-2 z-[1] px-2 text-sm text-slate-400 transition-all before:absolute before:top-0 before:left-0 before:z-[-1] before:block before:h-full before:w-full before:bg-white before:transition-all peer-required:after:text-pink-500 peer-required:after:content-['\00a0*'] peer-valid:-top-2 peer-valid:text-xs peer-focus:-top-2 peer-focus:text-xs peer-focus:text-emerald-500 peer-disabled:cursor-not-allowed peer-disabled:text-slate-400 peer-disabled:before:bg-transparent"
+            >
+              RollNo
             </label>
           </div>
           <div className="relative my-2 w-72 sm:w-60">
@@ -347,7 +359,7 @@ const SelectedSearch = () => {
                 ) : null}
               </select>
               <label
-                htmlFor="year"
+                htmlFor="subject"
                 className="pointer-events-none absolute top-2.5 left-2 z-[1] px-2 text-sm text-slate-400 transition-all before:absolute before:top-0 before:left-0 before:z-[-1] before:block before:h-full before:w-full before:bg-white before:transition-all peer-required:after:text-pink-500 peer-required:after:content-['\00a0*'] peer-valid:-top-2 peer-valid:text-xs peer-focus:-top-2 peer-focus:text-xs peer-focus:text-emerald-500 peer-disabled:cursor-not-allowed peer-disabled:text-slate-400 peer-disabled:before:bg-transparent"
               >
                 subject
@@ -361,8 +373,8 @@ const SelectedSearch = () => {
           <div className="relative my-2 w-72 sm:w-60 ">
             <input
               type="file"
-              name="assignment"
-              id="assignment"
+              name="assignmentAndNotes"
+              id="assignmentAndNotes"
               className="peer relative h-10 w-full appearance-none border-b border-slate-200 bg-white px-4 text-sm text-slate-500 outline-none transition-all autofill:bg-white focus:border-emerald-500 focus-visible:outline-none focus:focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400"
               onChange={(e) => setFile(e.target.files[0])}
             />
@@ -375,7 +387,7 @@ const SelectedSearch = () => {
               cols="28"
               value={selected.description}
               rows="2"
-              placeholder="Recorded class Description"
+              placeholder="Some Description"
               onChange={handleSelectChange}
             ></textarea>
           </div>

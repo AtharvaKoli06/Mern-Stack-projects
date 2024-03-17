@@ -13,76 +13,51 @@ import {
 import { FcLeave } from "react-icons/fc";
 import { SiRemark } from "react-icons/si";
 import { VscRepo } from "react-icons/vsc";
-import { RxUpdate } from "react-icons/rx";
 const features = [
   {
     id: 1,
-    name: "STUDENT ENTRY AND UPDATE",
-    img: <RxUpdate size={45} />,
-    navigate: "/student-credentials-update",
-  },
-  {
-    id: 2,
     name: "MARK ATTENDENCE",
     img: <FaMarker size={45} />,
     navigate: "/mark-attendence",
   },
   {
-    id: 3,
+    id: 2,
     name: "ATTENDENCE REPORT",
     img: <TbReportSearch size={45} />,
     navigate: "/live-class-attendence-report",
   },
   {
-    id: 4,
+    id: 3,
     name: "STUDENT REPORT",
     img: <HiOutlineDocumentReport size={45} />,
     navigate: "/student-report",
   },
   {
-    id: 5,
+    id: 4,
     name: "DX ROOM",
     img: <FaRestroom size={45} />,
     navigate: "/upload-lecture-Assignments",
   },
   {
-    id: 6,
+    id: 5,
     name: "ADD MARKS",
     img: <FaRegAddressCard size={45} />,
     navigate: "/add-marks",
   },
   {
-    id: 7,
+    id: 6,
     name: "CREATE EXAM",
     img: <IoIosCreate size={45} />,
     navigate: "/create-exam",
   },
   {
-    id: 8,
-    name: "LEAVE NOTE",
-    img: <FcLeave size={45} />,
-    navigate: "/leavenote",
-  },
-  {
-    id: 9,
+    id: 7,
     name: "REMARK",
     img: <SiRemark size={45} />,
     navigate: "/complaintbox",
   },
   {
-    id: 10,
-    name: "DAILY REPORT",
-    img: <FaSquarePollHorizontal size={45} />,
-    navigate: "/daily-report",
-  },
-  {
-    id: 11,
-    name: "REPORTS",
-    img: <VscRepo size={45} />,
-    navigate: "/activity",
-  },
-  {
-    id: 12,
+    id: 8,
     name: "TIMETABLE",
     img: <FaTimeline size={45} />,
     navigate: "/timetable",

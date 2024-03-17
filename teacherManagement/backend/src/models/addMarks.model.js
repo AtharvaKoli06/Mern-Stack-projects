@@ -1,16 +1,12 @@
 import mongoose, { Schema } from "mongoose";
 
-const assignmentModel = Schema(
+const addMarksOfExam = Schema(
   {
+    year: {
+      type: String,
+      required: true,
+    },
     courseName: {
-      type: String,
-      required: true,
-    },
-    subject: {
-      type: String,
-      required: true,
-    },
-    subject: {
       type: String,
       required: true,
     },
@@ -18,7 +14,7 @@ const assignmentModel = Schema(
       type: String,
       required: true,
     },
-    rollNo: {
+    subject: {
       type: String,
       required: true,
     },
@@ -26,19 +22,24 @@ const assignmentModel = Schema(
       type: String,
       required: true,
     },
-    year: {
+    rollNo: {
       type: String,
       required: true,
     },
-    assignmentOrNotes: {
+    examName: {
       type: String,
       required: true,
     },
-    description: {
-      type: String,
+    writtenMarks: {
+      type: Number,
+      required: true,
+    },
+    oralMarks: {
+      type: Number,
+      required: true,
     },
   },
   { timestamp: true }
 );
 
-export const Assignment = mongoose.model("Assignment", assignmentModel);
+export const AddMarksOfExam = mongoose.model("AddMarksOfExam", addMarksOfExam);
